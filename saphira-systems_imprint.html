@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Imprint — Saphira Systems</title>
+<meta name="description" content="Imprint of Saphira Systems per § 5 E-Commerce-Gesetz (ECG) and § 24 Mediengesetz." />
+<meta name="robots" content="index, follow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saphira-dark: #17191E;
+    --saphira-dark-2: #1E2128;
+    --saphira-dark-3: #252830;
+    --amber-light: #F2C63D;
+    --bg: var(--saphira-dark);
+    --bg-deep: #101216;
+    --line: rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.16);
+    --text: #ffffff;
+    --text-dim: rgba(255, 255, 255, 0.65);
+    --text-faint: rgba(255, 255, 255, 0.40);
+    --accent: var(--amber-light);
+    --sans: 'Inter', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+  /* Top bar */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(23,25,30,0.88);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border-bottom: 1px solid var(--line);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .topbar-logo svg { width: 86px; height: 24px; }
+  .topbar-name {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+  .topbar-name .systems {
+    font-weight: 400;
+    color: var(--text-dim);
+    margin-left: 4px;
+  }
+  .topbar-name .dot { color: var(--accent); }
+  .topbar-back {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    transition: color 0.3s;
+  }
+  .topbar-back:hover { color: var(--accent); }
+
+  /* Layout */
+  main {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 100px 48px 140px;
+  }
+  .section-num {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 40px;
+  }
+  .section-num span { color: var(--accent); }
+  .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .label::before {
+    content: ""; width: 24px; height: 1px; background: var(--accent);
+  }
+  h1 {
+    font-size: clamp(40px, 5.5vw, 64px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-top: 24px;
+  }
+  h1 .accent { color: var(--accent); }
+  .meta-row {
+    margin-top: 32px;
+    padding: 18px 22px;
+    border: 1px solid var(--line);
+    background: var(--saphira-dark-2);
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .meta-row .meta-tag { color: var(--accent); font-weight: 600; }
+  .lead {
+    margin-top: 48px;
+    color: var(--text-dim);
+    font-size: 17px;
+    line-height: 1.7;
+    max-width: 64ch;
+  }
+
+  /* Sections */
+  section.policy {
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+  section.policy h2 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  section.policy h2 .num {
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.10em;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+  section.policy p {
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    max-width: 72ch;
+  }
+  section.policy ul {
+    margin: 12px 0 16px 0;
+    padding-left: 22px;
+    color: var(--text-dim);
+  }
+  section.policy li { margin-bottom: 6px; }
+  section.policy a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(242,198,61,0.4);
+    transition: border-color 0.3s;
+  }
+  section.policy a:hover { border-color: var(--accent); }
+  section.policy strong { color: var(--text); font-weight: 600; }
+
+  /* Data table */
+  .data-table {
+    margin: 20px 0;
+    border: 1px solid var(--line);
+    background: var(--saphira-dark-2);
+  }
+  .data-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    border-bottom: 1px solid var(--line);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-row .k,
+  .data-row .v {
+    padding: 14px 18px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .data-row .k {
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 11px;
+    border-right: 1px solid var(--line);
+  }
+  .data-row .v { color: var(--text-dim); }
+  @media (max-width: 600px) {
+    .data-row { grid-template-columns: 1fr; }
+    .data-row .k { border-right: none; border-bottom: 1px solid var(--line); }
+  }
+
+  /* Footer */
+  footer.privacy-foot {
+    background: var(--bg-deep);
+    border-top: 1px solid var(--line);
+    padding: 60px 48px 40px;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  footer.privacy-foot a {
+    color: var(--text-dim);
+    text-decoration: none;
+    margin: 0 12px;
+    transition: color 0.3s;
+  }
+  footer.privacy-foot a:hover { color: var(--accent); }
+  .foot-links { margin-bottom: 18px; }
+
+  @media (max-width: 700px) {
+    .topbar { padding: 14px 20px; }
+    main { padding: 60px 20px 100px; }
+    footer.privacy-foot { padding: 50px 20px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ TOPBAR ═══════ -->
+<header class="topbar">
+  <a href="saphira-systems_v5.html#hero" class="topbar-logo" aria-label="Saphira Systems Home">
+    <svg viewBox="5 7 102 28" preserveAspectRatio="xMidYMid meet">
+      <polyline points="7.4,32.3 11.7,10.1 17.2,32.3 39.4,26.2 61.5,32.3 67.5,30.7"
+        fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline points="67.5,30.7 83.4,26.2"
+        fill="none" stroke="#F2C63D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline points="83.4,26.2 105.5,32.3"
+        fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="topbar-name">SAPHIRA<span class="systems">SYSTEMS</span><span class="dot">.</span></span>
+  </a>
+  <a href="saphira-systems_v5.html#contact" class="topbar-back">← Back to Saphira</a>
+</header>
+
+<!-- ═══════ MAIN ═══════ -->
+<main>
+  <div class="section-num"><span>/ 00</span> &nbsp;&nbsp; LEGAL · IMPRINT</div>
+  <div class="label">Who&rsquo;s behind this site</div>
+  <h1>Imprint<span class="accent">.</span></h1>
+
+  <div class="meta-row">
+    <span><span class="meta-tag">Per</span> &nbsp; &sect; 5 ECG &middot; &sect; 24 &amp; 25 Mediengesetz</span>
+    <span><span class="meta-tag">Jurisdiction</span> &nbsp; Austria &middot; EU</span>
+  </div>
+
+  <p class="lead">
+    Saphira Systems is currently a project operated by a natural person. A founding of <em>Saphira Systems GmbH</em> is planned;
+    no commercial register entry exists yet. This page identifies the responsible party for the website and its content.
+  </p>
+
+  <!-- 1 — Media owner & responsible -->
+  <section class="policy" id="responsible">
+    <h2><span class="num">01</span>Media owner &amp; responsible for content</h2>
+    <p>Media owner (<em>Medieninhaber</em>) and responsible for the content of this website according to &sect;&nbsp;24 and &sect;&nbsp;25 Mediengesetz, and service provider (<em>Diensteanbieter</em>) according to &sect;&nbsp;5 E-Commerce-Gesetz:</p>
+    <div class="data-table">
+      <div class="data-row"><div class="k">Name</div><div class="v">Patrick Pfeiffer</div></div>
+      <div class="data-row"><div class="k">Address</div><div class="v">Auwiesenstrasse 43, 5161 Elixhausen, Austria</div></div>
+      <div class="data-row"><div class="k">Email</div><div class="v"><a href="mailto:info@saphira-systems.at">info@saphira-systems.at</a></div></div>
+      <div class="data-row"><div class="k">Phone</div><div class="v"><a href="tel:+436604444836">+43 660 444 4836</a></div></div>
+    </div>
+  </section>
+
+  <!-- 2 — Business purpose -->
+  <section class="policy" id="purpose">
+    <h2><span class="num">02</span>Business purpose</h2>
+    <p>Development and marketing of mobile, containerized solar-hybrid energy systems (&ldquo;Saphira Core&rdquo;) for off-grid, remote and mission-critical operations.</p>
+  </section>
+
+  <!-- 3 — Company status -->
+  <section class="policy" id="status">
+    <h2><span class="num">03</span>Company status</h2>
+    <p>Saphira Systems is a project operated by Patrick Pfeiffer as a natural person. The founding of <em>Saphira Systems GmbH</em> is planned. As long as no entry in the Austrian Commercial Register (<em>Firmenbuch</em>) exists, the legal entity behind the website is the natural person named above &mdash; not a limited liability company.</p>
+    <p>References to &ldquo;Saphira Systems GmbH&rdquo; elsewhere on this website refer to the planned legal entity. They do not imply that the GmbH already exists.</p>
+  </section>
+
+  <!-- 4 — Editorial direction -->
+  <section class="policy" id="direction">
+    <h2><span class="num">04</span>Editorial direction (&sect; 25 Mediengesetz)</h2>
+    <p>Information and B2B marketing on deployable energy infrastructure &mdash; solar-hybrid power systems for off-grid, remote and mission-critical operations. The site addresses operators, EPCs, integrators, government and defense buyers.</p>
+  </section>
+
+  <!-- 5 — Disclaimer -->
+  <section class="policy" id="disclaimer">
+    <h2><span class="num">05</span>Disclaimer</h2>
+    <p>All information on this website is provided without guarantee of accuracy or completeness. Technical specifications, visualizations, yield figures, deployment times and economic figures (LCOE, payback, diesel savings) are indicative and may be subject to change. They depend on site-specific conditions and are not a binding commercial offer.</p>
+    <p>External links lead to third-party content over which we have no editorial control. Liability for linked content lies solely with the respective operator.</p>
+  </section>
+
+  <!-- 6 — Copyright -->
+  <section class="policy" id="copyright">
+    <h2><span class="num">06</span>Copyright</h2>
+    <p>All content on this website &mdash; including text, graphics, logos, photographs, renderings, animations and code &mdash; is protected by Austrian and EU copyright law unless explicitly marked otherwise. Re-use, reproduction or commercial use requires prior written consent.</p>
+  </section>
+
+  <!-- 7 — Online dispute resolution -->
+  <section class="policy" id="odr">
+    <h2><span class="num">07</span>Online dispute resolution</h2>
+    <p>Information under Regulation (EU) No&nbsp;524/2013: the European Commission provides a platform for online dispute resolution at <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>. We are not obliged and not willing to participate in dispute resolution proceedings before a consumer arbitration board.</p>
+  </section>
+
+  <!-- 8 — Contact for legal matters -->
+  <section class="policy" id="contact">
+    <h2><span class="num">08</span>Contact for legal matters</h2>
+    <p>For legal enquiries, takedown requests or data-protection questions, please write to <a href="mailto:info@saphira-systems.at">info@saphira-systems.at</a> &middot; <a href="tel:+436604444836">+43&nbsp;660&nbsp;444&nbsp;4836</a>. For privacy-specific questions see also the <a href="saphira-systems_privacy.html">Privacy Policy</a>.</p>
+  </section>
+</main>
+
+<footer class="privacy-foot">
+  <div class="foot-links">
+    <a href="saphira-systems_v5.html#hero">Home</a>
+    <a href="saphira-systems_v5.html#contact">Contact</a>
+    <a href="saphira-systems_privacy.html">Privacy</a>
+    <a href="saphira-systems_imprint.html">Imprint</a>
+  </div>
+  <div>&copy; 2026 Patrick Pfeiffer &middot; Saphira Systems &middot; Power. Deployed. Anywhere.</div>
+</footer>
+
+</body>
+</html>

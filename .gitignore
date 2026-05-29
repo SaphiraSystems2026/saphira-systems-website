@@ -1,0 +1,18 @@
+# Local / legacy / WIP files — do not deploy
+saphira-systems.html
+saphira-systems_v*.html
+*_backup.html
+proposals_v*.md
+saphira-core-render.png
+
+# OS / IDE noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.swp
+.vscode/
+.idea/
+
+# OneDrive sync metadata
+.~*
