@@ -1856,6 +1856,13 @@
     overflow: hidden;
   }
   .deploy-canvas { width: 100%; height: 100%; display: block; }
+  /* The 32:9 cinematic strip is only ~94px tall on a phone — too short for the
+     86px container drawing, so the "SAPHIRA CORE" / stage labels collided with
+     it. A taller ratio on phones gives the scene vertical room (the canvas
+     redraws proportionally). */
+  @media (max-width: 600px) {
+    .deploy-stage { aspect-ratio: 2 / 1; }
+  }
   .deploy-phases {
     margin-top: 40px;
     display: grid;
