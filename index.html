@@ -3266,8 +3266,11 @@
     position: fixed;
     right: 84px;
     bottom: 24px;
-    width: 320px;
+    width: 360px;
     max-width: calc(100vw - 32px);
+    max-height: min(74vh, 580px);
+    display: flex;
+    flex-direction: column;
     background: var(--saphira-dark-2);
     border: 1px solid var(--line-strong);
     z-index: 79;
@@ -3303,35 +3306,104 @@
     transition: color 0.2s;
   }
   .saphi-close:hover { color: var(--text); }
+  /* Chat message list (scrollable) */
   .saphi-body {
-    padding: 18px 16px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     font-size: 13px;
-    color: var(--text-dim);
-    line-height: 1.6;
+    line-height: 1.55;
   }
-  .saphi-quick-actions {
-    margin-top: 14px;
-    display: flex; flex-direction: column; gap: 6px;
+  .saphi-msg {
+    max-width: 88%;
+    padding: 9px 12px;
+    border-radius: 2px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
-  .saphi-action {
-    display: block;
-    padding: 10px 12px;
+  .saphi-msg-bot {
+    align-self: flex-start;
     background: var(--saphira-dark);
     border: 1px solid var(--line);
+    color: var(--text-dim);
+  }
+  .saphi-msg-bot strong { color: var(--text); font-weight: 600; }
+  .saphi-msg-user {
+    align-self: flex-end;
+    background: rgba(242,198,61,0.10);
+    border: 1px solid rgba(242,198,61,0.3);
     color: var(--text);
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    transition: all 0.25s;
   }
-  .saphi-action:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(242,198,61,0.04);
+  .saphi-src {
+    align-self: flex-start;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-top: -4px;
   }
+  /* Suggested-question chips */
+  .saphi-suggestions {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 0 16px 12px;
+  }
+  .saphi-chip {
+    font-family: inherit;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--saphira-dark);
+    border: 1px solid var(--line);
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .saphi-chip:hover { color: var(--accent); border-color: var(--accent); }
+  /* Input row */
+  .saphi-input-row {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--line);
+  }
+  .saphi-input {
+    flex: 1;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--saphira-dark);
+    border: 1px solid var(--line);
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .saphi-input:focus { border-color: var(--accent); }
+  .saphi-input::placeholder { color: var(--text-faint); }
+  .saphi-send {
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 1;
+    color: #17191E;
+    background: var(--accent);
+    border: none;
+    padding: 0 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .saphi-send:hover { opacity: 0.88; }
+  .saphi-foot {
+    padding: 0 16px 12px;
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.03em;
+  }
+  .saphi-foot a { color: var(--text-dim); text-decoration: none; }
+  .saphi-foot a:hover { color: var(--accent); }
   @media (max-width: 600px) {
-    .saphi-panel { right: 16px; left: 16px; bottom: 76px; width: auto; }
+    .saphi-panel { right: 16px; left: 16px; bottom: 76px; width: auto; max-height: 72vh; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -9534,12 +9606,14 @@
     </div>
     <button class="saphi-close" type="button" aria-label="Close">×</button>
   </div>
-  <div class="saphi-body">
-    <p data-i18n="saphi.intro">Saphi is being installed. In the meantime, choose how you&rsquo;d like to talk to us:</p>
-    <div class="saphi-quick-actions">
-      <a href="#contact" class="saphi-action" data-i18n="saphi.form">Open Contact Form</a>
-      <a href="https://wa.me/436604444836" target="_blank" rel="noopener" class="saphi-action" data-i18n="saphi.whatsapp">Chat on WhatsApp</a>
-    </div>
+  <div class="saphi-body" id="saphi-messages" role="log" aria-live="polite"></div>
+  <div class="saphi-suggestions" id="saphi-suggestions"></div>
+  <form class="saphi-input-row" id="saphi-form" autocomplete="off">
+    <input type="text" id="saphi-input" class="saphi-input" placeholder="Ask about Saphira Core…" aria-label="Ask Saphi" maxlength="300" />
+    <button type="submit" class="saphi-send" aria-label="Send">&rarr;</button>
+  </form>
+  <div class="saphi-foot">
+    Prefer a person? <a href="#contact">Contact form</a> · <a href="https://wa.me/436604444836" target="_blank" rel="noopener">WhatsApp</a>
   </div>
 </div>
 
@@ -11732,6 +11806,139 @@
   document.getElementById('consent-decline').addEventListener('click', function () {
     store('denied'); hide();
   });
+})();
+</script>
+<script>
+/* Saphi — deterministic Q&A over a curated knowledge base.
+   Ported from saphira-premium-v2 (saphi-engine.ts / knowledge.ts).
+   No generation, no paraphrasing: answers are returned verbatim from the
+   knowledge base, so there is no possibility of hallucinated specs. Pricing
+   questions are refused; off-topic questions are politely declined; low-
+   confidence matches return a "no verified info" fallback. */
+(function () {
+  'use strict';
+
+  var KB = [
+    { id: 'product-overview', topic: 'Saphira Core overview', tags: ['product','overview','what','system'],
+      body: "Saphira Core is a rapidly deployable, containerized solar power system. It folds out from a standard 20 ft High Cube ISO container into a 130 × 8 m PV array generating 134 kWp peak and approximately 200,000 kWh per year per unit. It is hybrid-ready and works standalone, with battery storage (BESS), diesel gensets, or a utility grid connection." },
+    { id: 'deployment-time', topic: 'Deployment and redeployment time', tags: ['deploy','time','minutes','setup','fast'],
+      body: "Initial setup takes approximately 8 hours with a 4-person crew (positioning, leveling, rail alignment, first deployment). After commissioning, the foldable PV array deploys or retracts automatically in approximately 25 minutes via a motor-driven chain mechanism and operator panel, handheld remote, or app." },
+    { id: 'capacity', topic: 'Power capacity and energy yield', tags: ['kwp','kwh','power','capacity','yield','generation','module','modules'],
+      body: "Each Saphira Core unit has 134 kWp installed capacity (200 modules × 670 Wp bifacial, 10 strings of 20 modules) and generates roughly 200,000 kWh per year depending on site irradiation. Units are modular — scale linearly by adding units." },
+    { id: 'environment', topic: 'Operating environment', tags: ['temperature','wind','harsh','climate','environment'],
+      body: "Saphira Core is engineered for harsh sites: operating temperature −30 °C to +70 °C, humidity 5–95 %, operational winds 0–89 km/h (Bft 9), terrain slope up to 5 %, terrain unevenness up to 0.5 m. Wind sensors trigger automatic retraction before storms. Retraction is required before snowfall or hail." },
+    { id: 'hybrid', topic: 'Hybrid architecture (PV + BESS + diesel + grid)', tags: ['hybrid','bess','battery','diesel','grid','ems'],
+      body: "Saphira Core integrates with a hybrid energy architecture managed by an Energy Management System (EMS): solar PV provides primary generation, BESS handles storage and grid-forming, diesel gensets serve as backup, and grid tie-in is used where available. Inverters support grid-forming and grid-following modes and are configured per project to match local grid codes (50/60 Hz)." },
+    { id: 'logistics', topic: 'Logistics and transport', tags: ['transport','container','logistics','ship','rail','truck','weight'],
+      body: "The system fits into one standard 20 ft High Cube ISO container, system weight approximately 14 tonnes. It ships by sea, rail, or truck without special permits. Integrated forklift pockets and crane corners simplify handling." },
+    { id: 'use-defence', topic: 'Defence and critical infrastructure use case', tags: ['defence','defense','military','critical','fob'],
+      body: "For defence and critical infrastructure, Saphira Core provides silent, low-signature power for mission-critical operations. It replaces or reduces diesel consumption at forward operating bases, eliminating vulnerable fuel-convoy logistics and integrating with existing gensets and BESS for continuous power." },
+    { id: 'use-mining', topic: 'Mining use case', tags: ['mining','mine','remote','esg'],
+      body: "Mining sites typically run on diesel gensets. Replacing or hybridizing those with Saphira Core can cut diesel costs by up to ~80 % depending on irradiation and load profile, supports ESG and regulatory compliance, and the system redeploys when mining operations move." },
+    { id: 'use-disaster', topic: 'Disaster relief and humanitarian missions', tags: ['disaster','relief','humanitarian','emergency'],
+      body: "For disaster relief, Saphira Core can be transported by truck or air to a damaged region and become operational within hours of arrival, providing independent power for shelters, field hospitals, communications, and water treatment without requiring local fuel supply." },
+    { id: 'use-industrial', topic: 'Industrial and construction use case', tags: ['industrial','construction','worksite','temporary'],
+      body: "For 6–24-month construction projects and dynamic industrial worksites, Saphira Core provides on-site power with no grid extension and no permanent infrastructure. It can be redeployed on the next project, with predictable energy pricing across the contract." },
+    { id: 'use-islands', topic: 'Island grids, resorts, off-grid communities', tags: ['island','resort','off-grid','offgrid','community'],
+      body: "Islands and remote resorts pay premium prices for diesel-based electricity. Saphira Core paired with BESS reduces dependence on imported fuel, lowers energy cost dramatically, and improves sustainability positioning. Units can be scaled to load growth without civil works." },
+    { id: 'savings', topic: 'Diesel and CO2 savings', tags: ['savings','diesel','co2','carbon','emissions','fuel'],
+      body: "A typical Saphira Core unit replaces roughly 50,000–60,000 litres of diesel per year and avoids approximately 150 tonnes of CO₂ emissions annually, subject to site irradiation, dispatch strategy, and BESS sizing. Typical payback in diesel-replacement scenarios is 2–4 years." },
+    { id: 'lcoe', topic: 'Levelized cost of energy (LCOE)', tags: ['lcoe','kwh','cost'],
+      body: "Diesel-generator LCOE typically ranges from USD 0.25 to over 1.00 per kWh in remote operations. A Saphira Core hybrid scenario typically delivers USD 0.04–0.10 per kWh, depending on irradiation, financing, and BESS sizing." },
+    { id: 'certification', topic: 'Certifications and standards', tags: ['certificate','certification','tuev','tuv','tüv','ce','standard','warranty'],
+      body: "The Saphira Core system is TÜV Süd-tested and CE-certified. Inverters and PV modules are selected per project to comply with local grid codes." },
+    { id: 'automation', topic: 'Automation and control', tags: ['automation','automatic','autonomous','remote','control','app'],
+      body: "Deployment, retraction, and end-position alignment are fully automated. Operators control the system via operator panel, handheld remote, or app. Wind monitoring, emergency stop, and warning lights are integrated. Autonomous operation is supported and remote monitoring is compatible." },
+    { id: 'production', topic: 'Production and lead time', tags: ['production','lead','delivery','made','austria'],
+      body: "Saphira Core is produced in Austria with a typical lead time of 1–2 months EXW." },
+    { id: 'sites', topic: 'Live deployments', tags: ['sites','reference','deployed','where','chile','germany','slovenia'],
+      body: "Saphira Core systems are operating in Germany (industrial / coal-plant site), Slovenia (industrial peak-shaving), and Antofagasta, Chile (port operations, hybrid PV + BESS + diesel). Company headquarters and production are in Austria." },
+    { id: 'business', topic: 'Business model and partners', tags: ['partner','epc','business','channel','sales'],
+      body: "Saphira Systems is an infrastructure-module manufacturer, not an EPC and not a solar installer. Local EPC partners own customer relationships and field execution. End customers receive an integrated turnkey solution via the partner." },
+    { id: 'company', topic: 'Company', tags: ['company','about','headquarters','ceo','contact','sun2fold'],
+      body: "Saphira Systems is an Austrian energy-infrastructure company building rapidly deployable solar-hybrid systems. CEO Patrick Pfeiffer. Contact info@saphira-systems.at. Technology partnership with Sun2Fold." }
+  ];
+
+  var SAPHIRA_TOKENS = ['saphira','saphi','core','sun2fold','solar','pv','panel','panels','module','modules','battery','batteries','bess','diesel','hybrid','container','containerized','deploy','deployment','deploys','deployed','redeploy','kwh','kwp','mwh','kw','off-grid','off grid','offgrid','grid','ems','energy','power','fuel','savings','payback','roi','mining','mine','defence','defense','military','army','fob','disaster','humanitarian','relief','telecom','tower','industrial','construction','worksite','island','resort','co2','carbon','emission','emissions','lcoe','tüv','tuv','ce','certif','wind','temperature','logistics','transport','ship','rail','truck','automat','autonomous','remote','app','control','site','sites','austria','germany','slovenia','chile','antofagasta','epc','partner','system','unit','units','yield','irradiation','footprint','weight','dimension','dimensions','spec','specs','warranty'];
+  var PRICING_TOKENS = ['price','prices','pricing','cost','costs','quote','quotation','offer','discount','negotiat','budget','invest','investment','capex','opex','tariff'];
+  var PRICING_PATTERNS = [/\bhow much (does|is|will|would) (it|that|the|a|one)\b/i, /\bwhat (does|is) it cost\b/i, /\b(€|eur|usd|\$)\s?\d/i];
+
+  var FALLBACK = "I currently don’t have verified information on that. For technical or commercial questions, please contact info@saphira-systems.at or use the contact form below.";
+  var PRICING = "I can’t share prices, quotes, or commercial terms — those are project-specific. Please reach out via info@saphira-systems.at or the contact form for a tailored offer.";
+  var OFFTOPIC = "I can only help with questions about Saphira Core — deployment, specs, hybrid setup, use cases, savings, and so on. Could you rephrase your question?";
+  var GREETING = "Hi, I’m Saphi. Ask me anything about Saphira Core — deployment, technical specs, use cases, or diesel/CO₂ savings.";
+  var MIN_SCORE = 1.5;
+
+  function normalize(s) { return s.toLowerCase().replace(/[^\w\sÀ-ɏ-]/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function tokenize(s) { return normalize(s).split(' ').filter(function (t) { return t.length >= 3; }); }
+
+  function score(query, entry) {
+    var qTokens = tokenize(query); if (!qTokens.length) return 0;
+    var seen = {}, q = [];
+    for (var i = 0; i < qTokens.length; i++) { if (!seen[qTokens[i]]) { seen[qTokens[i]] = 1; q.push(qTokens[i]); } }
+    var s = 0, j, qt, t;
+    for (j = 0; j < entry.tags.length; j++) { t = entry.tags[j];
+      for (i = 0; i < q.length; i++) { qt = q[i]; if (t === qt) s += 3; else if (t.indexOf(qt) > -1 || qt.indexOf(t) > -1) s += 2; } }
+    var topic = tokenize(entry.topic);
+    for (j = 0; j < topic.length; j++) { t = topic[j];
+      for (i = 0; i < q.length; i++) { qt = q[i]; if (t === qt) s += 2; else if (t.length >= 4 && (t.indexOf(qt) > -1 || qt.indexOf(t) > -1)) s += 1; } }
+    var body = {}; var bt = tokenize(entry.body); for (j = 0; j < bt.length; j++) body[bt[j]] = 1;
+    for (i = 0; i < q.length; i++) { if (body[q[i]]) s += 0.6; }
+    return s;
+  }
+
+  function isPricing(q) { var n = normalize(q); for (var i = 0; i < PRICING_TOKENS.length; i++) if (n.indexOf(PRICING_TOKENS[i]) > -1) return true; for (i = 0; i < PRICING_PATTERNS.length; i++) if (PRICING_PATTERNS[i].test(q)) return true; return false; }
+  function isOnTopic(q) { var n = normalize(q); if (n.length < 3) return false; for (var i = 0; i < SAPHIRA_TOKENS.length; i++) if (n.indexOf(SAPHIRA_TOKENS[i]) > -1) return true; return false; }
+
+  function answer(query) {
+    if (isPricing(query)) return { kind: 'pricing', text: PRICING };
+    if (!isOnTopic(query)) return { kind: 'offtopic', text: OFFTOPIC };
+    var best = null, bestS = 0;
+    for (var i = 0; i < KB.length; i++) { var sc = score(query, KB[i]); if (sc > bestS) { bestS = sc; best = KB[i]; } }
+    if (!best || bestS < MIN_SCORE) return { kind: 'no-info', text: FALLBACK };
+    return { kind: 'answer', text: best.body, source: best.topic };
+  }
+
+  // ── UI ──
+  var panel = document.getElementById('saphi-panel');
+  if (!panel) return;
+  var msgs = document.getElementById('saphi-messages');
+  var form = document.getElementById('saphi-form');
+  var input = document.getElementById('saphi-input');
+  var sugg = document.getElementById('saphi-suggestions');
+
+  function scrollDown() { msgs.scrollTop = msgs.scrollHeight; }
+  function addMsg(text, who, source) {
+    var d = document.createElement('div');
+    d.className = 'saphi-msg saphi-msg-' + who;
+    d.textContent = text;
+    msgs.appendChild(d);
+    if (source) { var s = document.createElement('div'); s.className = 'saphi-src'; s.textContent = source; msgs.appendChild(s); }
+    scrollDown();
+  }
+
+  addMsg(GREETING, 'bot');
+
+  var SUGGESTIONS = ['How fast does it deploy?', 'Power output per unit?', 'Operating temperature?', 'Diesel & CO₂ savings?'];
+  SUGGESTIONS.forEach(function (q) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'saphi-chip'; b.textContent = q;
+    b.addEventListener('click', function () { input.value = q; submit(); });
+    sugg.appendChild(b);
+  });
+
+  function submit() {
+    var q = (input.value || '').trim();
+    if (!q) return;
+    addMsg(q, 'user');
+    input.value = '';
+    if (sugg.parentNode) { sugg.style.display = 'none'; } // hide chips after first ask
+    var r = answer(q);
+    addMsg(r.text, 'bot', r.kind === 'answer' ? r.source : null);
+    if (window.gtag) { try { window.gtag('event', 'saphi_query', { kind: r.kind }); } catch (e) {} }
+  }
+
+  form.addEventListener('submit', function (e) { e.preventDefault(); submit(); });
 })();
 </script>
 </body>
