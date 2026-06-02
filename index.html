@@ -551,7 +551,10 @@
   }
   .hero-content { position: relative; z-index: 3; width: 100%; flex-shrink: 0; }
   .hero-content h1 {
-    font-size: clamp(48px, 9vw, 144px);
+    /* Tie the size to viewport HEIGHT as well as width (min of the two) so on
+       shorter windows the headline shrinks just enough to keep the KPI row on
+       the same screen instead of pushing it below the fold. */
+    font-size: clamp(48px, min(9vw, 13vh), 144px);
     font-weight: 700;
     line-height: 0.96;
     letter-spacing: -0.025em;
