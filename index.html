@@ -966,6 +966,13 @@
   @media (max-width: 900px) {
     .product-visual { aspect-ratio: 16 / 9; }
   }
+  @media (max-width: 600px) {
+    /* Show the full render edge-to-edge at its native 16:9 instead of a zoomed,
+       cropped near-square — bigger left-to-right, same proportions. (Placed after
+       the base .product-img so it wins on equal specificity.) */
+    .product-visual { min-height: 0; }
+    .product-img { transform: none; }
+  }
 
   /* ── CALLOUTS overlay on product render ── */
   .callouts {
@@ -2288,6 +2295,16 @@
     color: var(--text);
     margin-top: 6px;
     letter-spacing: -0.01em;
+  }
+  @media (max-width: 600px) {
+    /* The legend label was overpowering the small map — shrink it and give the
+       map more room by trimming the section's vertical padding. */
+    #map-section { padding: 90px 20px; }
+    .map-header { margin-bottom: 36px; }
+    .map-wrap { aspect-ratio: 3 / 2; }
+    .map-legend { bottom: 10px; left: 10px; padding: 6px 10px; gap: 10px; }
+    .legend-item { font-size: 8.5px; letter-spacing: 0.03em; }
+    .legend-dot { width: 6px; height: 6px; }
   }
 
   /* ═══════ PARTNERSHIP ═══════ */
@@ -9629,6 +9646,9 @@
     var ctx = canvas.getContext('2d');
     var W, H, dpr = window.devicePixelRatio || 1;
     var step = 0, targetStep = 0;
+    // Mobile auto-play: the stage is too short to scroll-scrub, so play the
+    // deploy sequence on a timer once it's on screen.
+    var autoT0 = 0, autoManual = false, AUTO_MS = 9000;
 
     function resize() {
       W = canvas.width = canvas.offsetWidth * dpr;
@@ -9694,12 +9714,8 @@
     function updateFromScroll() {
       if (!scrollTrack) return;
       if (mobileMQ.matches) {
-        var sect = document.getElementById('deployment');
-        var sr = sect.getBoundingClientRect();
-        var vh = window.innerHeight;
-        var p = (vh - sr.top) / (vh + sr.height);
-        p = Math.max(0, Math.min(1, p));
-        targetStep = progressToStep(p);
+        // Mobile uses time-based auto-play (see loop), not scroll-scrubbing.
+        return;
       } else {
         var rect = scrollTrack.getBoundingClientRect();
         var vh2 = window.innerHeight;
@@ -9720,8 +9736,10 @@
       btn.addEventListener('click', function() {
         var s = parseInt(btn.dataset.step, 10);
         if (mobileMQ.matches || !scrollTrack) {
+          autoManual = true; // a tap pauses auto-play so the chosen step stays
           targetStep = s;
           setActiveStep(s);
+          if (progressFill) progressFill.style.width = ((s / maxStep) * 100).toFixed(2) + '%';
           return;
         }
         var vh = window.innerHeight;
@@ -10216,6 +10234,16 @@
 
     // Direct scroll-scrub animation loop (no lerp — step follows targetStep 1:1)
     function loop() {
+      // On mobile the stage scrolls away before a scroll-scrubbed animation could
+      // finish, so advance the deploy sequence on a timer while it's on screen.
+      if (mobileMQ.matches && !autoManual) {
+        if (!autoT0) autoT0 = Date.now();
+        var prog = Math.min(1, (Date.now() - autoT0) / AUTO_MS);
+        prog = 1 - Math.pow(1 - prog, 2); // ease-out
+        targetStep = prog * maxStep;
+        setActiveStep(targetStep);
+        if (progressFill) progressFill.style.width = ((targetStep / maxStep) * 100).toFixed(2) + '%';
+      }
       step = targetStep;
       ctx.clearRect(0, 0, W, H);
       drawGround();
@@ -10227,7 +10255,7 @@
     var running = false, rafId = 0;
     whenVisible(canvas,
       function() { if (!running) { running = true; rafId = requestAnimationFrame(loop); } },
-      function() { running = false; if (rafId) cancelAnimationFrame(rafId); });
+      function() { running = false; if (rafId) cancelAnimationFrame(rafId); autoT0 = 0; });
 
   })();
 
