@@ -613,9 +613,15 @@
     .hero-image { width: 88%; opacity: 0.7; }
   }
   @media (max-width: 900px) {
+    /* Belt-and-suspenders: never allow the page to scroll sideways on mobile.
+       overflow-x:clip (not hidden) won't create a scroll container or break
+       sticky/fixed, and the energy-flow diagram keeps its own internal scroll. */
+    html, body { overflow-x: clip; max-width: 100%; }
     /* Hero flows naturally on mobile: no fixed viewport height and no
-       absolutely-pinned bottom block — both caused the headline/body overlap. */
-    #hero { min-height: auto; overflow: visible; padding-top: 88px; padding-bottom: 56px; }
+       absolutely-pinned bottom block — both caused the headline/body overlap.
+       overflow:clip keeps the absolutely-positioned backdrop from spilling past
+       the viewport (the previous `visible` let it cause a horizontal scroll). */
+    #hero { min-height: auto; overflow: clip; padding-top: 88px; padding-bottom: 56px; }
     /* On mobile the image becomes a faint atmospheric backdrop.
        Disable the ken-burns zoom — its scale(1.1) pushed the image past the
        viewport and produced a horizontal scrollbar. */
@@ -10022,7 +10028,11 @@
       var nTents = 10;
       var tentW = g.availableW / nTents;
       var baseY = cy + cH/2; // tent base sits on rail (= container bottom level)
-      var apexH = 16*dpr;
+      // Apex height proportional to tent width so the roof pitch matches the
+      // desktop original at any canvas width. (A fixed 16*dpr made the narrow
+      // tents on a phone-width canvas look far too steep.) The min() keeps the
+      // wide desktop layout visually unchanged.
+      var apexH = Math.min(16 * dpr, tentW * 0.19);
 
       var emergeProgress = progress * nTents;
       var currentEmerging = Math.min(nTents, Math.floor(emergeProgress));
