@@ -3243,19 +3243,6 @@
     transform: translate(8px, -50%);
   }
   .fab:hover .fab-tooltip { opacity: 1; transform: translate(0, -50%); }
-  .fab-saphi-dot {
-    position: absolute;
-    top: 7px; right: 7px;
-    width: 7px; height: 7px;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--accent-glow);
-    animation: saphiPulse 2.2s ease-in-out infinite;
-  }
-  @keyframes saphiPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
-  }
   @media (max-width: 600px) {
     .fab-cluster { right: 16px; bottom: 16px; gap: 8px; }
     .fab { width: 44px; height: 44px; }
@@ -9588,7 +9575,6 @@
   </a>
   <button class="fab fab-saphi" type="button" data-fab="saphi" aria-label="Chat with Saphi">
     <span class="fab-tooltip" data-i18n="fab.saphi">Chat with Saphi</span>
-    <span class="fab-saphi-dot" aria-hidden="true"></span>
     <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
       <path d="M4 5h16v11H8l-4 4z"/>
       <circle cx="10" cy="10.5" r="0.6" fill="currentColor"/>
