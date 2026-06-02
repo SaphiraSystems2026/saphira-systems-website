@@ -3340,6 +3340,56 @@
       transition-duration: 0.01ms !important;
     }
   }
+  /* ═══════ COOKIE / ANALYTICS CONSENT (GDPR opt-in) ═══════ */
+  .consent-banner {
+    position: fixed;
+    left: 16px; right: 16px; bottom: 16px;
+    z-index: 900;               /* above content/FAB (80), below intro (1000) */
+    max-width: 660px;
+    margin: 0 auto;
+    background: rgba(16,18,22,0.97);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line-strong);
+    padding: 18px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 18px;
+    box-shadow: 0 14px 44px rgba(0,0,0,0.55);
+    transform: translateY(170%);
+    transition: transform 0.5s cubic-bezier(0.65,0,0.35,1);
+  }
+  .consent-banner.show { transform: translateY(0); }
+  .consent-text {
+    flex: 1 1 280px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text-dim);
+  }
+  .consent-text a { color: var(--accent); text-decoration: none; }
+  .consent-text a:hover { text-decoration: underline; }
+  .consent-actions { display: flex; gap: 10px; flex-shrink: 0; }
+  .consent-btn {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 9px 20px;
+    cursor: pointer;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--text-dim);
+    transition: color 0.2s, border-color 0.2s, opacity 0.2s;
+  }
+  .consent-btn:hover { color: var(--text); border-color: var(--text-faint); }
+  .consent-btn.accept { background: var(--accent); color: #17191E; border-color: var(--accent); }
+  .consent-btn.accept:hover { opacity: 0.88; color: #17191E; }
+  @media (max-width: 600px) {
+    .consent-banner { padding: 16px; gap: 12px; }
+    .consent-actions { width: 100%; }
+    .consent-btn { flex: 1; }
+  }
 </style>
 </head>
 <body>
@@ -11603,5 +11653,86 @@
 })();
 </script>
 
+<!-- Cookie / analytics consent — GDPR opt-in: Google Analytics loads ONLY after Accept -->
+<div id="consent-banner" class="consent-banner" role="dialog" aria-label="Privacy consent">
+  <div class="consent-text">
+    We use cookies only for anonymous usage statistics (Google Analytics) to improve this site.
+    Nothing is loaded or tracked without your consent. See our
+    <a href="saphira-systems_privacy.html">Privacy Policy</a>.
+  </div>
+  <div class="consent-actions">
+    <button type="button" class="consent-btn decline" id="consent-decline">Decline</button>
+    <button type="button" class="consent-btn accept" id="consent-accept">Accept</button>
+  </div>
+</div>
+
+<script>
+/* Google Analytics 4 — privacy-first opt-in.
+   gtag.js is injected ONLY after the visitor accepts; declining loads nothing.
+   The choice is remembered in localStorage. Adds custom scroll-depth events
+   (25/50/75/100%) on top of GA4's automatic engagement-time + 90% scroll. */
+(function () {
+  'use strict';
+  var GA_ID = 'G-DNR6B6VW8Y';
+  var KEY = 'saphira-analytics-consent';
+  var banner = document.getElementById('consent-banner');
+
+  function loadGA() {
+    if (window.__gaLoaded) return;
+    window.__gaLoaded = true;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', GA_ID, { anonymize_ip: true });
+
+    // Finer scroll-behaviour signal than GA4's single 90% event.
+    var marks = [25, 50, 75, 100], fired = {};
+    window.addEventListener('scroll', function () {
+      var d = document.documentElement;
+      var max = (d.scrollHeight - d.clientHeight) || 1;
+      var pct = (d.scrollTop || document.body.scrollTop) / max * 100;
+      for (var i = 0; i < marks.length; i++) {
+        var m = marks[i];
+        if (pct >= m && !fired[m]) { fired[m] = true; gtag('event', 'scroll_depth', { percent_scrolled: m }); }
+      }
+    }, { passive: true });
+  }
+
+  function hide() { banner.classList.remove('show'); }
+  function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+
+  var choice = null;
+  try { choice = localStorage.getItem(KEY); } catch (e) {}
+
+  if (choice === 'granted') {
+    loadGA();
+  } else if (choice !== 'denied') {
+    // Reveal the banner once the intro overlay is gone.
+    var intro = document.getElementById('intro');
+    var shown = false;
+    function reveal() { if (!shown) { shown = true; banner.classList.add('show'); } }
+    if (!intro || intro.style.display === 'none' || intro.classList.contains('done')) {
+      reveal();
+    } else {
+      var t = setInterval(function () {
+        if (intro.style.display === 'none' || intro.classList.contains('done')) { clearInterval(t); reveal(); }
+      }, 300);
+      setTimeout(function () { clearInterval(t); reveal(); }, 8000);
+    }
+  }
+
+  document.getElementById('consent-accept').addEventListener('click', function () {
+    store('granted'); hide(); loadGA();
+  });
+  document.getElementById('consent-decline').addEventListener('click', function () {
+    store('denied'); hide();
+  });
+})();
+</script>
 </body>
 </html>
