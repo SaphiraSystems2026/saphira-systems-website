@@ -9528,6 +9528,17 @@
     });
   });
 
+  // Pause a canvas animation loop while its canvas is scrolled out of view.
+  // Several always-on canvas loops over a 25k-px page could exhaust the mobile
+  // WebKit content process ("A problem repeatedly occurred"); only animating
+  // what's on screen keeps CPU/GPU/memory in check.
+  function whenVisible(canvas, onShow, onHide) {
+    if (!('IntersectionObserver' in window)) { onShow(); return; }
+    new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) onShow(); else onHide();
+    }, { rootMargin: '150px' }).observe(canvas);
+  }
+
   // ───── HERO PARTICLES ─────
   (function() {
     var canvas = document.getElementById('hero-canvas');
@@ -9550,7 +9561,9 @@
       my = (e.clientY - r.top) * dpr;
     });
 
-    for (var i = 0; i < 80; i++) {
+    // Particle links are O(n²) per frame — keep the count low on phones.
+    var PARTICLE_COUNT = window.innerWidth < 700 ? 34 : 80;
+    for (var i = 0; i < PARTICLE_COUNT; i++) {
       particles.push({
         x: Math.random() * 1600,
         y: Math.random() * 1000,
@@ -9601,9 +9614,12 @@
           }
         }
       }
-      requestAnimationFrame(frame);
+      if (running) rafId = requestAnimationFrame(frame);
     }
-    frame();
+    var running = false, rafId = 0;
+    whenVisible(canvas,
+      function() { if (!running) { running = true; rafId = requestAnimationFrame(frame); } },
+      function() { running = false; if (rafId) cancelAnimationFrame(rafId); });
   })();
 
   // ───── DEPLOYMENT CANVAS ─────
@@ -10206,9 +10222,12 @@
       drawSceneContent(step);
       var labelIdx = Math.max(0, Math.min(maxStep, Math.floor(step + 0.001)));
       drawLabelAndBrackets(labelIdx);
-      requestAnimationFrame(loop);
+      if (running) rafId = requestAnimationFrame(loop);
     }
-    loop();
+    var running = false, rafId = 0;
+    whenVisible(canvas,
+      function() { if (!running) { running = true; rafId = requestAnimationFrame(loop); } },
+      function() { running = false; if (rafId) cancelAnimationFrame(rafId); });
 
   })();
 
@@ -10394,9 +10413,12 @@
         }
         ctx.stroke();
       }
-      requestAnimationFrame(frame);
+      if (running) rafId = requestAnimationFrame(frame);
     }
-    requestAnimationFrame(frame);
+    var running = false, rafId = 0;
+    whenVisible(canvas,
+      function() { if (!running) { running = true; rafId = requestAnimationFrame(frame); } },
+      function() { running = false; if (rafId) cancelAnimationFrame(rafId); });
   })();
 
   // ───── PRODUCT VISUAL: CALLOUTS + SCROLL REVEAL ─────
