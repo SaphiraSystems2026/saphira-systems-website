@@ -11932,7 +11932,8 @@
     if (!q) return;
     addMsg(q, 'user');
     input.value = '';
-    if (sugg.parentNode) { sugg.style.display = 'none'; } // hide chips after first ask
+    // Keep the suggestion chips visible so the visitor can always ask another
+    // question (especially on mobile, without opening the keyboard).
     var r = answer(q);
     addMsg(r.text, 'bot', r.kind === 'answer' ? r.source : null);
     if (window.gtag) { try { window.gtag('event', 'saphi_query', { kind: r.kind }); } catch (e) {} }
