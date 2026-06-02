@@ -10028,11 +10028,7 @@
       var nTents = 10;
       var tentW = g.availableW / nTents;
       var baseY = cy + cH/2; // tent base sits on rail (= container bottom level)
-      // Apex height proportional to tent width so the roof pitch matches the
-      // desktop original at any canvas width. (A fixed 16*dpr made the narrow
-      // tents on a phone-width canvas look far too steep.) The min() keeps the
-      // wide desktop layout visually unchanged.
-      var apexH = Math.min(16 * dpr, tentW * 0.19);
+      var apexH = 16*dpr;
 
       var emergeProgress = progress * nTents;
       var currentEmerging = Math.min(nTents, Math.floor(emergeProgress));
@@ -10256,9 +10252,23 @@
       }
       step = targetStep;
       ctx.clearRect(0, 0, W, H);
+      var labelIdx = Math.max(0, Math.min(maxStep, Math.floor(step + 0.001)));
+      // Render the scene uniformly scaled to a 1100px-wide virtual design. The
+      // container/supports use fixed px sizes while the PV modules are derived
+      // from canvas width, so on a narrow phone canvas the fixed parts looked
+      // oversized next to tiny modules. Drawing into a constant 1100px-wide space
+      // and scaling to fit keeps every element's proportion to the others exactly
+      // as on desktop. Positions stay proportional; only the fixed sizes scale.
+      var sc = mobileMQ.matches ? (canvas.offsetWidth / 1100) : 1;
+      var rW = W, rH = H;
+      ctx.save();
+      if (sc !== 1) { ctx.scale(sc, sc); W = rW / sc; H = rH / sc; }
       drawGround();
       drawSceneContent(step);
-      var labelIdx = Math.max(0, Math.min(maxStep, Math.floor(step + 0.001)));
+      W = rW; H = rH;
+      ctx.restore();
+      // Labels/brackets stay at real scale so the caption is legible and the
+      // corner brackets frame the actual canvas.
       drawLabelAndBrackets(labelIdx);
       if (running) rafId = requestAnimationFrame(loop);
     }
