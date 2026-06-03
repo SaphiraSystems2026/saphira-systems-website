@@ -2029,6 +2029,19 @@
     .pvc-row.pvc-head .pvc-col { padding: 14px 20px; }
   }
 
+  /* Desktop scrollytelling: keep the whole pinned composition (headline + stage
+     + step cards) inside the viewport so the step cards are fully visible the
+     moment the scroll-scrub engages. Height-adaptive — spacious on tall screens,
+     compact on short laptop screens — so nothing is clipped. (Placed after the
+     base deploy rules so these win on equal specificity.) */
+  @media (min-width: 901px) {
+    .deploy-pin { padding: clamp(20px, 4vh, 80px) 0; }
+    .deploy-header { margin-bottom: clamp(20px, 4vh, 80px); }
+    .deploy-header h2 { font-size: clamp(32px, min(5.5vw, 6.2vh), 72px); }
+    .deploy-phases { margin-top: clamp(18px, 2.6vh, 40px); }
+    .deploy-stage { max-height: 39vh; }
+  }
+
   /* ═══════ ECONOMICS ═══════ */
   #economics { background: var(--bg-deep); }
   .econ-header { text-align: center; max-width: 900px; margin: 0 auto 80px; }
