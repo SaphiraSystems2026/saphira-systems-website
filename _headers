@@ -1,0 +1,25 @@
+# Cloudflare Pages headers
+# Long-lived caching for static assets so repeat visits don't re-validate every
+# file. NOTE: these are cached "immutable" for a year — if you replace an image
+# with the SAME filename, rename it (or add ?v=2) so visitors get the new one.
+
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+/*.jpeg
+  Cache-Control: public, max-age=31536000, immutable
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+/*.ico
+  Cache-Control: public, max-age=31536000, immutable
+
+# PDFs may be updated in place — cache for a day
+/*.pdf
+  Cache-Control: public, max-age=86400
+
+# HTML pages stay always-fresh (revalidate so content/translations update at once)
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
