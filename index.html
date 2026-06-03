@@ -3425,6 +3425,38 @@
       transition-duration: 0.01ms !important;
     }
   }
+  /* ═══════ TRUST STRIP (badges under the hero) ═══════ */
+  .trust-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 14px 44px;
+    padding: 22px 24px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-deep);
+  }
+  .trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .trust-badge svg {
+    width: 15px; height: 15px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  @media (max-width: 600px) {
+    .trust-strip { gap: 12px 22px; padding: 18px 16px; }
+    .trust-badge { font-size: 10px; letter-spacing: 0.1em; }
+  }
+
   /* ═══════ SECTION SCROLL NAVIGATOR (right-side dot rail) ═══════ */
   .section-rail {
     position: fixed;
@@ -3543,6 +3575,28 @@
     .consent-btn { flex: 1; }
   }
 </style>
+
+<!-- Product structured data for search engines (Organization schema already exists above; invisible to visitors) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Saphira Core",
+  "brand": { "@type": "Brand", "name": "Saphira Systems" },
+  "manufacturer": { "@type": "Organization", "name": "Saphira Systems" },
+  "category": "Deployable solar power system",
+  "url": "https://saphira-systems.at/#product",
+  "description": "Containerized, rapidly deployable solar power system. Folds out from a 20 ft High Cube container into a 130 m PV array generating 134 kWp peak. Hybrid-ready with battery storage, diesel and grid. Engineered and made in Europe; TUV Sud tested and CE certified.",
+  "additionalProperty": [
+    { "@type": "PropertyValue", "name": "Peak power", "value": "134 kWp" },
+    { "@type": "PropertyValue", "name": "PV modules", "value": "200 x 670 Wp bifacial" },
+    { "@type": "PropertyValue", "name": "Deployment time", "value": "approx. 25 minutes" },
+    { "@type": "PropertyValue", "name": "System weight", "value": "approx. 14 t" },
+    { "@type": "PropertyValue", "name": "Operating temperature", "value": "-30 C to +70 C" },
+    { "@type": "PropertyValue", "name": "Certification", "value": "TUV Sud tested, CE certified" }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -3688,6 +3742,22 @@
     <div class="line"></div>
   </div>
 </section>
+
+<!-- Trust badges -->
+<div class="trust-strip" role="list" aria-label="Engineering and certifications">
+  <span class="trust-badge" role="listitem">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+    Engineered &amp; Made in Europe
+  </span>
+  <span class="trust-badge" role="listitem">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+    TÜV Süd tested
+  </span>
+  <span class="trust-badge" role="listitem">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+    CE certified
+  </span>
+</div>
 
 <!-- ═══════ SHIFT ═══════ -->
 <section id="shift">
@@ -9590,8 +9660,8 @@
         <h3 data-i18n="contact.success.title">Inquiry received.</h3>
         <p data-i18n="contact.success.body">Thank you. Our team will get back to you shortly — typically within one business day.</p>
         <div class="success-actions">
-          <a href="mailto:info@saphira-systems.at?subject=Saphira%20Core%20datasheet%20request" class="hero-btn ghost" data-datasheet="placeholder">
-            <span data-i18n="contact.success.datasheet">Request datasheet</span>
+          <a href="Saphira_Core_Brochure.pdf" target="_blank" rel="noopener" class="hero-btn ghost" data-download="brochure">
+            <span>Download brochure (PDF)</span>
           </a>
         </div>
       </div>
@@ -9621,7 +9691,7 @@
       <a href="#product" data-i18n="footer.product.core">Saphira Core</a>
       <a href="#applications" data-i18n="footer.product.applications">Applications</a>
       <a href="#deployment" data-i18n="footer.product.deployment">Deployment</a>
-      <a href="mailto:info@saphira-systems.at?subject=Saphira%20Core%20datasheet%20request" data-datasheet="placeholder" data-i18n="footer.product.datasheet">Datasheet <span class="soon">(soon)</span></a>
+      <a href="Saphira_Core_Brochure.pdf" target="_blank" rel="noopener" data-download="brochure">Brochure (PDF)</a>
     </div>
     <div class="footer-col">
       <h5 data-i18n="footer.company.title">Company</h5>
@@ -11864,6 +11934,16 @@
   window.addEventListener('load', measure);
   measure();
 })();
+</script>
+
+<script>
+/* Track brochure / file downloads in GA (only fires once analytics is consented). */
+document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('[data-download]');
+  if (a && window.gtag) {
+    window.gtag('event', 'file_download', { file_name: a.getAttribute('data-download'), link_url: a.getAttribute('href') });
+  }
+});
 </script>
 
 <!-- Cookie / analytics consent — GDPR opt-in: Google Analytics loads ONLY after Accept -->
