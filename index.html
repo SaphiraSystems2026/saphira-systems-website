@@ -3425,6 +3425,52 @@
       transition-duration: 0.01ms !important;
     }
   }
+  /* ═══════ SECTION SCROLL NAVIGATOR (right-side dot rail) ═══════ */
+  .section-rail {
+    position: fixed;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  .rail-dot {
+    position: relative;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+    cursor: pointer;
+    transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+  }
+  .rail-dot:hover { background: rgba(255,255,255,0.55); }
+  .rail-dot.active {
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+    transform: scale(1.35);
+  }
+  .rail-label {
+    position: absolute;
+    right: 20px; top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text);
+    background: rgba(16,18,22,0.92);
+    border: 1px solid var(--line);
+    padding: 5px 9px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .rail-dot:hover .rail-label { opacity: 1; }
+  @media (max-width: 900px) { .section-rail { display: none; } }
+
   /* ═══════ COOKIE / ANALYTICS CONSENT (GDPR opt-in) ═══════ */
   .consent-banner {
     position: fixed;
@@ -11736,6 +11782,58 @@
     apply(detectInitial());
   })();
 
+})();
+</script>
+
+<!-- Section scroll navigator: shows current position and jumps between sections -->
+<nav class="section-rail" id="section-rail" aria-label="Section navigation">
+  <a href="#hero" class="rail-dot" aria-label="Top"><span class="rail-label">Top</span></a>
+  <a href="#shift" class="rail-dot" aria-label="Mission"><span class="rail-label">Mission</span></a>
+  <a href="#product" class="rail-dot" aria-label="Core"><span class="rail-label">Core</span></a>
+  <a href="#deployment" class="rail-dot" aria-label="Deployment"><span class="rail-label">Deployment</span></a>
+  <a href="#applications" class="rail-dot" aria-label="Applications"><span class="rail-label">Applications</span></a>
+  <a href="#map-section" class="rail-dot" aria-label="Markets"><span class="rail-label">Markets</span></a>
+  <a href="#economics" class="rail-dot" aria-label="Economics"><span class="rail-label">Economics</span></a>
+  <a href="#partnership" class="rail-dot" aria-label="Partners"><span class="rail-label">Partners</span></a>
+  <a href="#faq" class="rail-dot" aria-label="FAQ"><span class="rail-label">FAQ</span></a>
+  <a href="#contact" class="rail-dot" aria-label="Contact"><span class="rail-label">Contact</span></a>
+</nav>
+
+<script>
+/* Section scroll-spy for the right-side dot rail: highlights the section you're
+   currently in (so you can see how far down the page you are) and the dots link
+   to each section for one-click jumps (native smooth scroll). */
+(function () {
+  'use strict';
+  var dots = [].slice.call(document.querySelectorAll('#section-rail .rail-dot'));
+  if (!dots.length) return;
+  var targets = dots.map(function (d) {
+    var id = (d.getAttribute('href') || '').slice(1);
+    return { dot: d, el: document.getElementById(id) };
+  }).filter(function (t) { return t.el; });
+
+  // Cache section offsets (only change on resize) so scroll handling does no
+  // layout reads — cheap enough to run directly without rAF throttling.
+  var tops = [];
+  function measure() { tops = targets.map(function (t) { return t.el.offsetTop; }); update(); }
+  var lastIdx = -1;
+  function update() {
+    var probe = window.scrollY + window.innerHeight * 0.35; // upper-third line
+    var activeIdx = 0;
+    for (var i = 0; i < tops.length; i++) { if (tops[i] <= probe) activeIdx = i; }
+    if (activeIdx === lastIdx) return;
+    lastIdx = activeIdx;
+    for (var j = 0; j < targets.length; j++) {
+      var on = j === activeIdx;
+      targets[j].dot.classList.toggle('active', on);
+      if (on) targets[j].dot.setAttribute('aria-current', 'true');
+      else targets[j].dot.removeAttribute('aria-current');
+    }
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', measure);
+  window.addEventListener('load', measure);
+  measure();
 })();
 </script>
 
