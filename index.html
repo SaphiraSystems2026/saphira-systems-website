@@ -410,7 +410,7 @@
   /* Language switcher — hidden for v6 EN-only launch.
      Machinery (DICT + apply) stays intact; remove this rule to re-enable. */
   .nav-lang {
-    display: none;
+    display: flex;
     align-items: center;
     gap: 2px;
     margin-right: 18px;
@@ -3658,7 +3658,7 @@
 
   <div id="intro-meta">
     <span>SAPHIRA CORE · MK·I</span>
-    <span>DEPLOYABLE ENERGY INFRASTRUCTURE</span>
+    <span data-i18n="hero.eyebrow">DEPLOYABLE ENERGY INFRASTRUCTURE</span>
     <span>2026</span>
   </div>
 </div>
@@ -3691,7 +3691,7 @@
     <div class="nav-lang" role="group" aria-label="Language">
       <button type="button" data-lang="en" aria-pressed="true">EN</button>
       <button type="button" data-lang="de" aria-pressed="false">DE</button>
-      <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      <button type="button" data-lang="es" aria-pressed="false" hidden>ES</button>
     </div>
     <button class="nav-cta" data-i18n="nav.cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact</button>
   </div>
@@ -3703,7 +3703,7 @@
   <div class="hero-image" role="img" aria-label="Saphira Core deployed at a quarry site"></div>
   <div class="hero-gradient"></div>
   <div class="container hero-content">
-    <div class="section-num"><span>/01</span> &nbsp;&nbsp; PROLOGUE</div>
+    <div class="section-num" data-i18n="hero.num" data-i18n-html><span>/01</span> &nbsp;&nbsp; PROLOGUE</div>
     <div class="label label-with-line reveal in">Deployable Energy Infrastructure</div>
     <h1 class="reveal in d1">
       Power.<br>
@@ -3721,24 +3721,24 @@
     <div class="hero-stats">
       <div class="hero-stat reveal d3">
         <div class="kpi-num">134<span class="unit">kWp</span></div>
-        <div class="kpi-label">Total output</div>
+        <div class="kpi-label" data-i18n="hero.k1">Total output</div>
       </div>
       <div class="hero-stat reveal d3">
         <div class="kpi-num">25<span class="unit">min</span></div>
-        <div class="kpi-label">Deploy / retract</div>
+        <div class="kpi-label" data-i18n="hero.k2">Deploy / retract</div>
       </div>
       <div class="hero-stat reveal d4">
         <div class="kpi-num">130<span class="unit">m</span></div>
-        <div class="kpi-label">Fully extended</div>
+        <div class="kpi-label" data-i18n="hero.k3">Fully extended</div>
       </div>
       <div class="hero-stat reveal d4">
         <div class="kpi-num">200</div>
-        <div class="kpi-label">PV modules</div>
+        <div class="kpi-label" data-i18n="hero.k4">PV modules</div>
       </div>
     </div>
   </div>
   <div class="scroll-cue">
-    <span>Scroll</span>
+    <span data-i18n="hero.scroll">Scroll</span>
     <div class="line"></div>
   </div>
 </section>
@@ -3747,15 +3747,15 @@
 <div class="trust-strip" role="list" aria-label="Engineering and certifications">
   <span class="trust-badge" role="listitem">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
-    Engineered &amp; Made in Europe
+    <span data-i18n="badge.eu">Engineered &amp; Made in Europe</span>
   </span>
   <span class="trust-badge" role="listitem">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
-    TÜV Süd tested
+    <span data-i18n="badge.tuv">TÜV Süd tested</span>
   </span>
   <span class="trust-badge" role="listitem">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
-    CE certified
+    <span data-i18n="badge.ce">CE certified</span>
   </span>
 </div>
 
@@ -4291,10 +4291,10 @@
 
 <!-- ═══════ APPLICATIONS ═══════ -->
 <section id="applications">
-  <div class="section-num"><span>/05</span> &nbsp;&nbsp; APPLICATIONS</div>
+  <div class="section-num" data-i18n="apps.num" data-i18n-html><span>/05</span> &nbsp;&nbsp; APPLICATIONS</div>
   <div class="apps-header reveal">
-    <div class="label label-with-line">Across key industries</div>
-    <h2>High-impact use cases<br>for mobile, containerized solar.</h2>
+    <div class="label label-with-line" data-i18n="apps.label">Across key industries</div>
+    <h2 data-i18n="apps.h2" data-i18n-html>High-impact use cases<br>for mobile, containerized solar.</h2>
   </div>
 
   <div class="apps-grid">
@@ -4306,9 +4306,9 @@
           <circle cx="10" cy="25.5" r="2.4"/>
           <circle cx="22" cy="25.5" r="2.4"/>
         </svg></div>
-        <div class="app-name">Mining &amp; exploration</div>
-        <div class="app-statement">Replace diesel at remote sites — reduce cost and fuel logistics.</div>
-        <p class="app-desc">Continuous off-grid power for extraction sites at the resource frontier. Reduce diesel cost by up to 80%. Eliminate fuel logistics.</p>
+        <div class="app-name" data-i18n="apps.c1.name" data-i18n-html>Mining &amp; exploration</div>
+        <div class="app-statement" data-i18n="apps.c1.stmt">Replace diesel at remote sites — reduce cost and fuel logistics.</div>
+        <p class="app-desc" data-i18n="apps.c1.desc" data-i18n-html>Continuous off-grid power for extraction sites at the resource frontier. Reduce diesel cost by up to 80%. Eliminate fuel logistics.</p>
       </div>
       <div class="app-meta"><span>SECTOR / 01</span></div>
     </div>
@@ -4324,9 +4324,9 @@
           <rect x="13" y="18" width="11" height="10"/>
           <line x1="17" y1="22" x2="20" y2="22"/>
         </svg></div>
-        <div class="app-name">Construction &amp; infrastructure</div>
-        <div class="app-statement">Temporary power for dynamic worksites — no grid required.</div>
-        <p class="app-desc">Temporary power for dynamic worksites (6–24 months). No grid required. Reusable across multiple projects. Predictable energy pricing.</p>
+        <div class="app-name" data-i18n="apps.c2.name" data-i18n-html>Construction &amp; infrastructure</div>
+        <div class="app-statement" data-i18n="apps.c2.stmt" data-i18n-html>Temporary power for dynamic worksites — no grid required.</div>
+        <p class="app-desc" data-i18n="apps.c2.desc" data-i18n-html>Temporary power for dynamic worksites (6–24 months). No grid required. Reusable across multiple projects. Predictable energy pricing.</p>
       </div>
       <div class="app-meta"><span>SECTOR / 02</span></div>
     </div>
@@ -4337,9 +4337,9 @@
           <path d="M16 5 Q22 13 22 19 A6 6 0 0 1 10 19 Q10 13 16 5 Z"/>
           <path d="M4 27 Q10 24 16 27 Q22 24 28 27"/>
         </svg></div>
-        <div class="app-name">Agriculture &amp; remote ops</div>
-        <div class="app-statement">Flexible energy for irrigation, cooling and processing.</div>
-        <p class="app-desc">Solar infrastructure for irrigation, cooling, processing. Hybrid-ready with pumps and storage. Relocatable and scalable architecture.</p>
+        <div class="app-name" data-i18n="apps.c3.name" data-i18n-html>Agriculture &amp; remote ops</div>
+        <div class="app-statement" data-i18n="apps.c3.stmt" data-i18n-html>Flexible energy for irrigation, cooling and processing.</div>
+        <p class="app-desc" data-i18n="apps.c3.desc" data-i18n-html>Solar infrastructure for irrigation, cooling, processing. Hybrid-ready with pumps and storage. Relocatable and scalable architecture.</p>
       </div>
       <div class="app-meta"><span>SECTOR / 03</span></div>
     </div>
@@ -4353,9 +4353,9 @@
           <path d="M7 11 Q16 14 25 11"/>
           <path d="M7 21 Q16 18 25 21"/>
         </svg></div>
-        <div class="app-name">Disaster relief &amp; response</div>
-        <div class="app-statement">Immediate power for critical infrastructure and crisis response.</div>
-        <p class="app-desc">Installation within hours. Stand-alone operation possible. Easy transport to critical locations. Supports crisis response infrastructure.</p>
+        <div class="app-name" data-i18n="apps.c4.name" data-i18n-html>Disaster relief &amp; response</div>
+        <div class="app-statement" data-i18n="apps.c4.stmt" data-i18n-html>Immediate power for critical infrastructure and crisis response.</div>
+        <p class="app-desc" data-i18n="apps.c4.desc" data-i18n-html>Installation within hours. Stand-alone operation possible. Easy transport to critical locations. Supports crisis response infrastructure.</p>
       </div>
       <div class="app-meta"><span>SECTOR / 04</span></div>
     </div>
@@ -4366,9 +4366,9 @@
           <path d="M16 4 L26 8 L26 17 Q26 24 16 28 Q6 24 6 17 L6 8 Z"/>
           <polygon points="16,11 17.5,15 22,15 18.5,17.7 19.7,22 16,19.5 12.3,22 13.5,17.7 10,15 14.5,15"/>
         </svg></div>
-        <div class="app-name">Defense &amp; critical infra</div>
-        <div class="app-statement">Mobile resilient systems for mission-critical operations.</div>
-        <p class="app-desc">Low thermal and acoustic signature. Reduced fuel logistics exposure. Containerized PV deployable directly in the field.</p>
+        <div class="app-name" data-i18n="apps.c5.name" data-i18n-html>Defense &amp; critical infra</div>
+        <div class="app-statement" data-i18n="apps.c5.stmt" data-i18n-html>Mobile resilient systems for mission-critical operations.</div>
+        <p class="app-desc" data-i18n="apps.c5.desc">Low thermal and acoustic signature. Reduced fuel logistics exposure. Containerized PV deployable directly in the field.</p>
       </div>
       <div class="app-meta"><span>SECTOR / 05</span></div>
     </div>
@@ -4383,9 +4383,9 @@
           <path d="M16 12 Q20 8 24 5"/>
           <path d="M4 27 Q10 24 16 27 Q22 24 28 27"/>
         </svg></div>
-        <div class="app-name">Island &amp; off-grid</div>
-        <div class="app-statement">Reliable, decentralized energy where grids are unstable.</div>
-        <p class="app-desc">On-site PV generation reduces dependence on expensive diesel power. Works alongside existing systems. Scalable to demand.</p>
+        <div class="app-name" data-i18n="apps.c6.name" data-i18n-html>Island &amp; off-grid</div>
+        <div class="app-statement" data-i18n="apps.c6.stmt" data-i18n-html>Reliable, decentralized energy where grids are unstable.</div>
+        <p class="app-desc" data-i18n="apps.c6.desc" data-i18n-html>On-site PV generation reduces dependence on expensive diesel power. Works alongside existing systems. Scalable to demand.</p>
       </div>
       <div class="app-meta"><span>SECTOR / 06</span></div>
     </div>
@@ -4394,11 +4394,11 @@
 
 <!-- ═══════ MAP ═══════ -->
 <section id="map-section">
-  <div class="section-num"><span>/06</span> &nbsp;&nbsp; GLOBAL SOLAR YIELD</div>
+  <div class="section-num" data-i18n="map.num" data-i18n-html><span>/06</span> &nbsp;&nbsp; GLOBAL SOLAR YIELD</div>
   <div class="container">
     <div class="map-header reveal">
-      <div class="label label-with-line">Mobile solar follows the sun</div>
-      <h2>Designed for <span class="accent">remote, high-growth and high-yield</span> energy markets worldwide.</h2>
+      <div class="label label-with-line" data-i18n="map.label">Mobile solar follows the sun</div>
+      <h2 data-i18n="map.h2" data-i18n-html>Designed for <span class="accent">remote, high-growth and high-yield</span> energy markets worldwide.</h2>
     </div>
 
     <div class="map-wrap reveal d1">
@@ -9092,7 +9092,7 @@
         <g id="markers"></g>
       </svg>
       <div class="map-legend">
-        <div class="legend-item"><span class="legend-dot"></span> Annual specific yield (kWh / kWp / yr)</div>
+        <div class="legend-item"><span class="legend-dot"></span> <span data-i18n="map.legend">Annual specific yield (kWh / kWp / yr)</span></div>
       </div>
       <div class="map-tooltip" id="map-tooltip">
         <div class="t-name"></div>
@@ -9105,92 +9105,92 @@
 
 <!-- ═══════ ECONOMICS ═══════ -->
 <section id="economics">
-  <div class="section-num"><span>/07</span> &nbsp;&nbsp; ECONOMICS</div>
+  <div class="section-num" data-i18n="econ.num" data-i18n-html><span>/07</span> &nbsp;&nbsp; ECONOMICS</div>
   <div class="container">
     <div class="econ-header reveal">
-      <div class="label label-with-line">Compelling unit economics</div>
-      <h2>Economically <span class="accent">superior</span> to diesel.</h2>
+      <div class="label label-with-line" data-i18n="econ.label">Compelling unit economics</div>
+      <h2 data-i18n="econ.h2" data-i18n-html>Economically <span class="accent">superior</span> to diesel.</h2>
     </div>
 
     <div class="compare reveal d1">
       <div class="compare-col diesel">
-        <div class="col-label">Status Quo</div>
-        <div class="col-name">Diesel Generation</div>
-        <div class="compare-row"><div class="metric">LCOE</div><div class="value">$0.25&ndash;1.00 <span style="font-size:12px;color:var(--text-faint);font-weight:400;">/kWh</span></div></div>
-        <div class="compare-row"><div class="metric">Annual diesel</div><div class="value">~50k <span style="font-size:12px;color:var(--text-faint);font-weight:400;">L</span></div></div>
-        <div class="compare-row"><div class="metric">CO₂ emissions</div><div class="value">~150 <span style="font-size:12px;color:var(--text-faint);font-weight:400;">t / yr</span></div></div>
-        <div class="compare-row"><div class="metric">Logistics tail</div><div class="value">CONSTANT</div></div>
-        <div class="compare-row"><div class="metric">Site signature</div><div class="value">Loud · Hot</div></div>
+        <div class="col-label" data-i18n="econ.colA">Status Quo</div>
+        <div class="col-name" data-i18n="econ.colAn">Diesel Generation</div>
+        <div class="compare-row"><div class="metric" data-i18n="econ.mLcoe">LCOE</div><div class="value">$0.25&ndash;1.00 <span style="font-size:12px;color:var(--text-faint);font-weight:400;">/kWh</span></div></div>
+        <div class="compare-row"><div class="metric" data-i18n="econ.mDiesel">Annual diesel</div><div class="value">~50k <span style="font-size:12px;color:var(--text-faint);font-weight:400;">L</span></div></div>
+        <div class="compare-row"><div class="metric" data-i18n="econ.mCo2e">CO₂ emissions</div><div class="value">~150 <span style="font-size:12px;color:var(--text-faint);font-weight:400;">t / yr</span></div></div>
+        <div class="compare-row"><div class="metric" data-i18n="econ.mLog">Logistics tail</div><div class="value" data-i18n="econ.vConst">CONSTANT</div></div>
+        <div class="compare-row"><div class="metric" data-i18n="econ.mSig">Site signature</div><div class="value" data-i18n="econ.vLoud">Loud · Hot</div></div>
       </div>
       <div class="compare-col saphira">
         <div class="col-label">Saphira Core</div>
-        <div class="col-name">Deployable Solar</div>
-        <div class="compare-row"><div class="metric">LCOE</div><div class="value">$0.04&ndash;0.09 <span style="font-size:12px;color:var(--text-dim);font-weight:400;">/kWh</span></div></div>
-        <div class="compare-row"><div class="metric">Annual energy</div><div class="value">up to 200 <span style="font-size:12px;color:var(--text-dim);font-weight:400;">MWh*</span></div></div>
-        <div class="compare-row"><div class="metric">CO₂ avoided</div><div class="value">~150 <span style="font-size:12px;color:var(--text-dim);font-weight:400;">t / yr</span></div></div>
-        <div class="compare-row"><div class="metric">Logistics tail</div><div class="value">NONE</div></div>
-        <div class="compare-row"><div class="metric">Site signature</div><div class="value">Silent · Cool</div></div>
+        <div class="col-name" data-i18n="econ.colBn">Deployable Solar</div>
+        <div class="compare-row"><div class="metric" data-i18n="econ.mLcoe">LCOE</div><div class="value">$0.04&ndash;0.09 <span style="font-size:12px;color:var(--text-dim);font-weight:400;">/kWh</span></div></div>
+        <div class="compare-row"><div class="metric" data-i18n="econ.mEnergy">Annual energy</div><div class="value">up to 200 <span style="font-size:12px;color:var(--text-dim);font-weight:400;">MWh*</span></div></div>
+        <div class="compare-row"><div class="metric" data-i18n="econ.mCo2a">CO₂ avoided</div><div class="value">~150 <span style="font-size:12px;color:var(--text-dim);font-weight:400;">t / yr</span></div></div>
+        <div class="compare-row"><div class="metric" data-i18n="econ.mLog">Logistics tail</div><div class="value" data-i18n="econ.vNone">NONE</div></div>
+        <div class="compare-row"><div class="metric" data-i18n="econ.mSig">Site signature</div><div class="value" data-i18n="econ.vSilent">Silent · Cool</div></div>
       </div>
     </div>
 
-    <p class="compare-footnote reveal" style="margin-top:16px;font-size:11px;color:var(--text-faint);letter-spacing:0.04em;">*Annual energy yield depending on solar radiation and location.</p>
+    <p class="compare-footnote reveal" data-i18n="econ.footnote" style="margin-top:16px;font-size:11px;color:var(--text-faint);letter-spacing:0.04em;">*Annual energy yield depending on solar radiation and location.</p>
 
     <div class="savings-bar reveal d2">
       <div>
         <div class="savings-num">80<span class="pct">%</span></div>
-        <div class="savings-label">Diesel cost reduction</div>
+        <div class="savings-label" data-i18n="econ.savLabel1">Diesel cost reduction</div>
       </div>
       <div class="savings-text">
-        <h4>Payback in 2–4 years. Reliable for 25.</h4>
-        <p>Saphira Core pays back its capital cost in 2–4 years at typical remote-mining and off-grid sites. The remaining 20+ years deliver near-zero marginal energy cost — and zero exposure to diesel price volatility, supply chain risk, or geopolitical disruption.</p>
+        <h4 data-i18n="econ.savH4">Payback in 2–4 years. Reliable for 25.</h4>
+        <p data-i18n="econ.savP">Saphira Core pays back its capital cost in 2–4 years at typical remote-mining and off-grid sites. The remaining 20+ years deliver near-zero marginal energy cost — and zero exposure to diesel price volatility, supply chain risk, or geopolitical disruption.</p>
       </div>
       <div>
         <div class="savings-num">2&ndash;4<span class="pct">YR</span></div>
-        <div class="savings-label">Typical payback</div>
+        <div class="savings-label" data-i18n="econ.savLabel2">Typical payback</div>
       </div>
     </div>
 
     <div class="impact-header reveal d2">
-      <div class="label label-with-line">Environmental impact</div>
-      <h3>Per unit, per year &mdash; <span class="accent">in tangible terms</span>.</h3>
+      <div class="label label-with-line" data-i18n="econ.impLabel">Environmental impact</div>
+      <h3 data-i18n="econ.impH3" data-i18n-html>Per unit, per year &mdash; <span class="accent">in tangible terms</span>.</h3>
     </div>
 
     <div class="impact-row reveal d3">
       <div class="impact-cell">
-        <div class="impact-prefix">Approx.</div>
+        <div class="impact-prefix" data-i18n="econ.impPrefix">Approx.</div>
         <div class="impact-num">~50,000<span class="impact-unit">L</span></div>
-        <div class="impact-label">Diesel saved annually</div>
+        <div class="impact-label" data-i18n="econ.impL1">Diesel saved annually</div>
         <div class="impact-equiv">
           <div class="impact-equiv-row">
             <span class="iv-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 17H3V8h11l3 4h4v5h-2"/><path d="M9 17h6"/></svg>
             </span>
-            <span class="iv-text">~6&nbsp;tanker truck deliveries avoided</span>
+            <span class="iv-text" data-i18n="econ.iv1">~6&nbsp;tanker truck deliveries avoided</span>
           </div>
           <div class="impact-equiv-row">
             <span class="iv-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14"/><path d="M5 17V8a2 2 0 012-2h10a2 2 0 012 2v9"/><path d="M9 6V4h6v2"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/></svg>
             </span>
-            <span class="iv-text">~1,300 car fuel-tank fillings</span>
+            <span class="iv-text" data-i18n="econ.iv2">~1,300 car fuel-tank fillings</span>
           </div>
         </div>
       </div>
       <div class="impact-cell">
-        <div class="impact-prefix">Approx.</div>
+        <div class="impact-prefix" data-i18n="econ.impPrefix">Approx.</div>
         <div class="impact-num">~150<span class="impact-unit">t&nbsp;CO&#8322;</span></div>
-        <div class="impact-label">CO&#8322; avoided annually</div>
+        <div class="impact-label" data-i18n="econ.impL2" data-i18n-html>CO&#8322; avoided annually</div>
         <div class="impact-equiv">
           <div class="impact-equiv-row">
             <span class="iv-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18h14"/><path d="M6 18l1-3h10l1 3"/><path d="M8 15V9a2 2 0 012-2h4a2 2 0 012 2v6"/><circle cx="8.5" cy="18" r="1.5"/><circle cx="15.5" cy="18" r="1.5"/></svg>
             </span>
-            <span class="iv-text">~55 passenger cars off the road for a year</span>
+            <span class="iv-text" data-i18n="econ.iv3">~55 passenger cars off the road for a year</span>
           </div>
           <div class="impact-equiv-row">
             <span class="iv-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M8 14a4 4 0 11-3-7 4 4 0 016-3 4 4 0 016 3 4 4 0 11-3 7H8z"/></svg>
             </span>
-            <span class="iv-text">~7,500 mature trees absorbing CO&#8322; per year</span>
+            <span class="iv-text" data-i18n="econ.iv4" data-i18n-html>~7,500 mature trees absorbing CO&#8322; per year</span>
           </div>
         </div>
       </div>
@@ -9200,16 +9200,16 @@
 
 <!-- ═══════ WHY WE EXIST ═══════ -->
 <section id="positioning">
-  <div class="section-num"><span>/08</span> &nbsp;&nbsp; WHY WE EXIST</div>
+  <div class="section-num" data-i18n="pos.num" data-i18n-html><span>/08</span> &nbsp;&nbsp; WHY WE EXIST</div>
   <div class="container">
     <div class="why-exist reveal">
-      <div class="label label-with-line">Why we are</div>
-      <h2 class="why-exist-h">Why we <span class="accent">exist</span><span class="dot">.</span></h2>
+      <div class="label label-with-line" data-i18n="pos.label">Why we are</div>
+      <h2 class="why-exist-h" data-i18n="pos.h2" data-i18n-html>Why we <span class="accent">exist</span><span class="dot">.</span></h2>
 
       <div class="why-exist-body">
-        <p>The world is becoming more electrified, decentralised and energy-dependent every day.</p>
-        <p>Yet millions of operations still rely on expensive, inflexible and carbon-intensive diesel generation.</p>
-        <p><strong>Saphira Systems</strong> is building a new category of energy infrastructure &mdash; deployable solar-hybrid power systems engineered for remote, off-grid and mission-critical operations.</p>
+        <p data-i18n="pos.p1">The world is becoming more electrified, decentralised and energy-dependent every day.</p>
+        <p data-i18n="pos.p2">Yet millions of operations still rely on expensive, inflexible and carbon-intensive diesel generation.</p>
+        <p data-i18n="pos.p3" data-i18n-html><strong>Saphira Systems</strong> is building a new category of energy infrastructure &mdash; deployable solar-hybrid power systems engineered for remote, off-grid and mission-critical operations.</p>
       </div>
 
       <div class="why-exist-claim">
@@ -9221,52 +9221,52 @@
 
 <!-- ═══════ PARTNERSHIP ═══════ -->
 <section id="partnership">
-  <div class="section-num"><span>/09</span> &nbsp;&nbsp; PARTNERSHIP MODEL</div>
+  <div class="section-num" data-i18n="part.num" data-i18n-html><span>/09</span> &nbsp;&nbsp; PARTNERSHIP MODEL</div>
   <div class="container">
     <div class="partner-header reveal">
-      <div class="label label-with-line">How we work together</div>
-      <h2>Built for operators<br>and integrators.</h2>
-      <p class="partner-intro">Saphira integrates the <strong>Sun2Fold</strong> folding-PV platform into a complete energy solution &mdash; and goes to market via <strong>local partners</strong> in every priority region.</p>
+      <div class="label label-with-line" data-i18n="part.label">How we work together</div>
+      <h2 data-i18n="part.h2" data-i18n-html>Built for operators<br>and integrators.</h2>
+      <p class="partner-intro" data-i18n="part.intro" data-i18n-html>Saphira integrates the <strong>Sun2Fold</strong> folding-PV platform into a complete energy solution &mdash; and goes to market via <strong>local partners</strong> in every priority region.</p>
     </div>
 
     <!-- Tier 1: Upstream Technology Partnership -->
     <div class="partner-tier reveal d1">
-      <div class="partner-tier-label"><span class="ptl-num">A</span>Technology partnership</div>
+      <div class="partner-tier-label" data-i18n="part.tA" data-i18n-html><span class="ptl-num">A</span>Technology partnership</div>
       <div class="partner-flow partner-flow-2">
         <div class="partner-node">
           <div class="p-step">SAPHIRA SYSTEMS</div>
-          <h4>Integrated energy solution</h4>
-          <p>System integration, EMS, hybrid architecture, deployable packaging, partner enablement.</p>
+          <h4 data-i18n="part.n1h">Integrated energy solution</h4>
+          <p data-i18n="part.n1p">System integration, EMS, hybrid architecture, deployable packaging, partner enablement.</p>
         </div>
         <div class="partner-arrow partner-arrow-bi" aria-hidden="true">&#8646;</div>
         <div class="partner-node">
           <div class="p-step">SUN2FOLD</div>
-          <h4>Folding-PV core technology</h4>
-          <p>Patented foldable PV platform &amp; mechanical IP. Saphira&rsquo;s exclusive technology partner.</p>
+          <h4 data-i18n="part.n2h">Folding-PV core technology</h4>
+          <p data-i18n="part.n2p" data-i18n-html>Patented foldable PV platform &amp; mechanical IP. Saphira&rsquo;s exclusive technology partner.</p>
         </div>
       </div>
     </div>
 
     <!-- Tier 2: Downstream Go-to-Market -->
     <div class="partner-tier reveal d2">
-      <div class="partner-tier-label"><span class="ptl-num">B</span>Go-to-market structure</div>
+      <div class="partner-tier-label" data-i18n="part.tB" data-i18n-html><span class="ptl-num">B</span>Go-to-market structure</div>
       <div class="partner-flow">
         <div class="partner-node">
           <div class="p-step">01 &mdash; Saphira Systems</div>
-          <h4>The infrastructure</h4>
-          <p>Complete energy-solution platform. Portfolio, system integration, partner enablement.</p>
+          <h4 data-i18n="part.n3h">The infrastructure</h4>
+          <p data-i18n="part.n3p">Complete energy-solution platform. Portfolio, system integration, partner enablement.</p>
         </div>
         <div class="partner-arrow">&rarr;</div>
         <div class="partner-node">
-          <div class="p-step">02 &mdash; Local EPC / Partner</div>
-          <h4>Local execution</h4>
-          <p>Local sales and project execution. EPC, service, customer access. Margin per unit and project upside.</p>
+          <div class="p-step" data-i18n="part.step2" data-i18n-html>02 &mdash; Local EPC / Partner</div>
+          <h4 data-i18n="part.n4h">Local execution</h4>
+          <p data-i18n="part.n4p">Local sales and project execution. EPC, service, customer access. Margin per unit and project upside.</p>
         </div>
         <div class="partner-arrow">&rarr;</div>
         <div class="partner-node">
-          <div class="p-step">03 &mdash; End Customer</div>
-          <h4>Turnkey delivery</h4>
-          <p>Buys turnkey energy solution. Receives one integrated offering with local service network.</p>
+          <div class="p-step" data-i18n="part.step3" data-i18n-html>03 &mdash; End Customer</div>
+          <h4 data-i18n="part.n5h">Turnkey delivery</h4>
+          <p data-i18n="part.n5p">Buys turnkey energy solution. Receives one integrated offering with local service network.</p>
         </div>
       </div>
     </div>
@@ -9274,48 +9274,48 @@
     <!-- Delivery & project execution -->
     <div class="partner-delivery reveal d3">
       <div class="partner-delivery-header">
-        <div class="label label-with-line">Delivery &amp; project execution</div>
-        <h3>Flexible manufacturing. <span class="accent">Production in Austria.</span></h3>
+        <div class="label label-with-line" data-i18n="part.delLabel" data-i18n-html>Delivery &amp; project execution</div>
+        <h3 data-i18n="part.delH3" data-i18n-html>Flexible manufacturing. <span class="accent">Production in Austria.</span></h3>
       </div>
       <div class="partner-delivery-grid">
         <div class="pd-tile">
           <div class="pd-num">01</div>
-          <h4>Lead time</h4>
-          <p>~1&ndash;2 months EXW standard. Available stock units may allow accelerated deployment.</p>
+          <h4 data-i18n="part.pd1h">Lead time</h4>
+          <p data-i18n="part.pd1p" data-i18n-html>~1&ndash;2 months EXW standard. Available stock units may allow accelerated deployment.</p>
         </div>
         <div class="pd-tile">
           <div class="pd-num">02</div>
-          <h4>Custom engineering</h4>
-          <p>Technical specs aligned jointly with the customer during project development.</p>
+          <h4 data-i18n="part.pd2h">Custom engineering</h4>
+          <p data-i18n="part.pd2p">Technical specs aligned jointly with the customer during project development.</p>
         </div>
         <div class="pd-tile">
           <div class="pd-num">03</div>
-          <h4>Scalable capacity</h4>
-          <p>Production capacity scales with project pipeline. Parallel production for multi-unit projects.</p>
+          <h4 data-i18n="part.pd3h" data-i18n-html>Scalable capacity</h4>
+          <p data-i18n="part.pd3p" data-i18n-html>Production capacity scales with project pipeline. Parallel production for multi-unit projects.</p>
         </div>
         <div class="pd-tile">
           <div class="pd-num">04</div>
-          <h4>Logistics &amp; Incoterms</h4>
-          <p>Flexible Incoterm structure depending on customer requirements. Standard container handling worldwide.</p>
+          <h4 data-i18n="part.pd4h" data-i18n-html>Logistics &amp; Incoterms</h4>
+          <p data-i18n="part.pd4p">Flexible Incoterm structure depending on customer requirements. Standard container handling worldwide.</p>
         </div>
       </div>
     </div>
 
     <!-- Closing stats + claim -->
     <div class="partner-grid">
-      <h3 class="reveal">A high-margin, fast-deploying<br>solar solution for <span class="accent">new applications</span>.</h3>
+      <h3 class="reveal" data-i18n="part.gridH3" data-i18n-html>A high-margin, fast-deploying<br>solar solution for <span class="accent">new applications</span>.</h3>
       <div class="partner-stats reveal d1">
         <div class="ps-item">
           <div class="ps-num">12&ndash;20<span class="symbol">wk</span></div>
-          <div class="ps-label">Order to power</div>
+          <div class="ps-label" data-i18n="part.ps1">Order to power</div>
         </div>
         <div class="ps-item">
           <div class="ps-num">25<span class="symbol">yr</span></div>
-          <div class="ps-label">Designed service life</div>
+          <div class="ps-label" data-i18n="part.ps2">Designed service life</div>
         </div>
         <div class="ps-item">
           <div class="ps-num">2<span class="symbol">yr</span></div>
-          <div class="ps-label">Structural warranty</div>
+          <div class="ps-label" data-i18n="part.ps3">Structural warranty</div>
         </div>
       </div>
     </div>
@@ -11424,6 +11424,110 @@
   (function() {
     var DICT = {
       en: {
+        'econ.num': '<span>/07</span> &nbsp;&nbsp; ECONOMICS',
+        'econ.label': 'Compelling unit economics',
+        'econ.h2': 'Economically <span class="accent">superior</span> to diesel.',
+        'econ.colA': 'Status Quo',
+        'econ.colAn': 'Diesel Generation',
+        'econ.colBn': 'Deployable Solar',
+        'econ.mLcoe': 'LCOE',
+        'econ.mLog': 'Logistics tail',
+        'econ.mSig': 'Site signature',
+        'econ.mDiesel': 'Annual diesel',
+        'econ.mCo2e': 'CO₂ emissions',
+        'econ.mEnergy': 'Annual energy',
+        'econ.mCo2a': 'CO₂ avoided',
+        'econ.vConst': 'CONSTANT',
+        'econ.vNone': 'NONE',
+        'econ.vLoud': 'Loud · Hot',
+        'econ.vSilent': 'Silent · Cool',
+        'econ.footnote': '*Annual energy yield depending on solar radiation and location.',
+        'econ.savLabel1': 'Diesel cost reduction',
+        'econ.savLabel2': 'Typical payback',
+        'econ.savH4': 'Payback in 2–4 years. Reliable for 25.',
+        'econ.savP': 'Saphira Core pays back its capital cost in 2–4 years at typical remote-mining and off-grid sites. The remaining 20+ years deliver near-zero marginal energy cost — and zero exposure to diesel price volatility, supply chain risk, or geopolitical disruption.',
+        'econ.impLabel': 'Environmental impact',
+        'econ.impH3': 'Per unit, per year &mdash; <span class="accent">in tangible terms</span>.',
+        'econ.impPrefix': 'Approx.',
+        'econ.impL1': 'Diesel saved annually',
+        'econ.iv1': '~6&nbsp;tanker truck deliveries avoided',
+        'econ.iv2': '~1,300 car fuel-tank fillings',
+        'econ.iv3': '~55 passenger cars off the road for a year',
+        'econ.iv4': '~7,500 mature trees absorbing CO&#8322; per year',
+        'econ.impL2': 'CO&#8322; avoided annually',
+        'pos.num': '<span>/08</span> &nbsp;&nbsp; WHY WE EXIST',
+        'pos.label': 'Why we are',
+        'pos.h2': 'Why we <span class="accent">exist</span><span class="dot">.</span>',
+        'pos.p1': 'The world is becoming more electrified, decentralised and energy-dependent every day.',
+        'pos.p2': 'Yet millions of operations still rely on expensive, inflexible and carbon-intensive diesel generation.',
+        'pos.p3': '<strong>Saphira Systems</strong> is building a new category of energy infrastructure &mdash; deployable solar-hybrid power systems engineered for remote, off-grid and mission-critical operations.',
+        'part.num': '<span>/09</span> &nbsp;&nbsp; PARTNERSHIP MODEL',
+        'part.label': 'How we work together',
+        'part.h2': 'Built for operators<br>and integrators.',
+        'part.intro': 'Saphira integrates the <strong>Sun2Fold</strong> folding-PV platform into a complete energy solution &mdash; and goes to market via <strong>local partners</strong> in every priority region.',
+        'part.tA': '<span class="ptl-num">A</span>Technology partnership',
+        'part.tB': '<span class="ptl-num">B</span>Go-to-market structure',
+        'part.n1h': 'Integrated energy solution',
+        'part.n1p': 'System integration, EMS, hybrid architecture, deployable packaging, partner enablement.',
+        'part.n2h': 'Folding-PV core technology',
+        'part.n3h': 'The infrastructure',
+        'part.n3p': 'Complete energy-solution platform. Portfolio, system integration, partner enablement.',
+        'part.n4h': 'Local execution',
+        'part.n4p': 'Local sales and project execution. EPC, service, customer access. Margin per unit and project upside.',
+        'part.n5h': 'Turnkey delivery',
+        'part.n5p': 'Buys turnkey energy solution. Receives one integrated offering with local service network.',
+        'part.n2p': 'Patented foldable PV platform &amp; mechanical IP. Saphira&rsquo;s exclusive technology partner.',
+        'part.step2': '02 &mdash; Local EPC / Partner',
+        'part.step3': '03 &mdash; End Customer',
+        'part.delLabel': 'Delivery &amp; project execution',
+        'part.delH3': 'Flexible manufacturing. <span class="accent">Production in Austria.</span>',
+        'part.pd1h': 'Lead time',
+        'part.pd1p': '~1&ndash;2 months EXW standard. Available stock units may allow accelerated deployment.',
+        'part.pd2h': 'Custom engineering',
+        'part.pd2p': 'Technical specs aligned jointly with the customer during project development.',
+        'part.pd3h': 'Scalable capacity',
+        'part.pd3p': 'Production capacity scales with project pipeline. Parallel production for multi-unit projects.',
+        'part.pd4h': 'Logistics &amp; Incoterms',
+        'part.pd4p': 'Flexible Incoterm structure depending on customer requirements. Standard container handling worldwide.',
+        'part.gridH3': 'A high-margin, fast-deploying<br>solar solution for <span class="accent">new applications</span>.',
+        'part.ps1': 'Order to power',
+        'part.ps2': 'Designed service life',
+        'part.ps3': 'Structural warranty',
+        'hero.eyebrow': 'DEPLOYABLE ENERGY INFRASTRUCTURE',
+        'hero.num': '<span>/01</span> &nbsp;&nbsp; PROLOGUE',
+        'hero.k1': 'Total output',
+        'hero.k2': 'Deploy / retract',
+        'hero.k3': 'Fully extended',
+        'hero.k4': 'PV modules',
+        'hero.scroll': 'Scroll',
+        'badge.eu': 'Engineered &amp; Made in Europe',
+        'badge.tuv': 'T&Uuml;V S&uuml;d tested',
+        'badge.ce': 'CE certified',
+        'apps.num': '<span>/05</span> &nbsp;&nbsp; APPLICATIONS',
+        'apps.label': 'Across key industries',
+        'apps.h2': 'High-impact use cases<br>for mobile, containerized solar.',
+        'apps.c1.name': 'Mining &amp; exploration',
+        'apps.c1.stmt': 'Replace diesel at remote sites — reduce cost and fuel logistics.',
+        'apps.c1.desc': 'Continuous off-grid power for extraction sites at the resource frontier. Reduce diesel cost by up to 80%. Eliminate fuel logistics.',
+        'apps.c2.name': 'Construction &amp; infrastructure',
+        'apps.c2.stmt': 'Temporary power for dynamic worksites — no grid required.',
+        'apps.c2.desc': 'Temporary power for dynamic worksites (6–24 months). No grid required. Reusable across multiple projects. Predictable energy pricing.',
+        'apps.c3.name': 'Agriculture &amp; remote ops',
+        'apps.c3.stmt': 'Flexible energy for irrigation, cooling and processing.',
+        'apps.c3.desc': 'Solar infrastructure for irrigation, cooling, processing. Hybrid-ready with pumps and storage. Relocatable and scalable architecture.',
+        'apps.c4.name': 'Disaster relief &amp; response',
+        'apps.c4.stmt': 'Immediate power for critical infrastructure and crisis response.',
+        'apps.c4.desc': 'Installation within hours. Stand-alone operation possible. Easy transport to critical locations. Supports crisis response infrastructure.',
+        'apps.c5.name': 'Defense &amp; critical infra',
+        'apps.c5.stmt': 'Mobile resilient systems for mission-critical operations.',
+        'apps.c5.desc': 'Low thermal and acoustic signature. Reduced fuel logistics exposure. Containerized PV deployable directly in the field.',
+        'apps.c6.name': 'Island &amp; off-grid',
+        'apps.c6.stmt': 'Reliable, decentralized energy where grids are unstable.',
+        'apps.c6.desc': 'On-site PV generation reduces dependence on expensive diesel power. Works alongside existing systems. Scalable to demand.',
+        'map.num': '<span>/06</span> &nbsp;&nbsp; GLOBAL SOLAR YIELD',
+        'map.label': 'Mobile solar follows the sun',
+        'map.h2': 'Designed for <span class="accent">remote, high-growth and high-yield</span> energy markets worldwide.',
+        'map.legend': 'Annual specific yield (kWh / kWp / yr)',
         'deploy.num': '<span>/04</span> &nbsp;&nbsp; DEPLOYMENT PROCESS',
         'deploy.label': 'From transport to power',
         'deploy.h2': 'One-time setup. <span class="accent">Re-deployable in 25 min.</span>',
@@ -11657,6 +11761,110 @@
         'contact.success.datasheet': 'Download datasheet'
       },
       de: {
+        'econ.num': '<span>/07</span> &nbsp;&nbsp; WIRTSCHAFTLICHKEIT',
+        'econ.label': '&Uuml;berzeugende Unit Economics',
+        'econ.h2': 'Wirtschaftlich <span class="accent">&uuml;berlegen</span> gegen&uuml;ber Diesel.',
+        'econ.colA': 'Status quo',
+        'econ.colAn': 'Dieselerzeugung',
+        'econ.colBn': 'Verlegbares Solar',
+        'econ.mLcoe': 'LCOE',
+        'econ.mLog': 'Logistik-Aufwand',
+        'econ.mSig': 'Standort-Signatur',
+        'econ.mDiesel': 'Diesel / Jahr',
+        'econ.mCo2e': 'CO₂-Emissionen',
+        'econ.mEnergy': 'Energie / Jahr',
+        'econ.mCo2a': 'CO₂ vermieden',
+        'econ.vConst': 'KONSTANT',
+        'econ.vNone': 'KEINE',
+        'econ.vLoud': 'Laut · Hei&szlig;',
+        'econ.vSilent': 'Leise · K&uuml;hl',
+        'econ.footnote': '*Jahres-Energieertrag abh&auml;ngig von Sonneneinstrahlung und Standort.',
+        'econ.savLabel1': 'Diesel-Kostenreduktion',
+        'econ.savLabel2': 'Typische Amortisation',
+        'econ.savH4': 'Amortisation in 2–4 Jahren. Zuverl&auml;ssig &uuml;ber 25.',
+        'econ.savP': 'Saphira Core amortisiert die Investitionskosten an typischen Remote-Mining- und Off-Grid-Standorten in 2–4 Jahren. Die restlichen 20+ Jahre liefern nahezu null marginale Energiekosten — und keinerlei Abh&auml;ngigkeit von Dieselpreis-Schwankungen, Lieferketten-Risiken oder geopolitischen St&ouml;rungen.',
+        'econ.impLabel': 'Umweltwirkung',
+        'econ.impH3': 'Pro Einheit, pro Jahr &mdash; <span class="accent">greifbar gemacht</span>.',
+        'econ.impPrefix': 'Ca.',
+        'econ.impL1': 'Diesel pro Jahr eingespart',
+        'econ.iv1': '~6&nbsp;Tanklaster-Lieferungen vermieden',
+        'econ.iv2': '~1.300 Auto-Tankf&uuml;llungen',
+        'econ.iv3': '~55 Pkw ein Jahr von der Stra&szlig;e',
+        'econ.iv4': '~7.500 ausgewachsene B&auml;ume, die ein Jahr CO&#8322; binden',
+        'econ.impL2': 'CO&#8322; pro Jahr vermieden',
+        'pos.num': '<span>/08</span> &nbsp;&nbsp; WARUM WIR EXISTIEREN',
+        'pos.label': 'Wof&uuml;r wir stehen',
+        'pos.h2': 'Warum wir <span class="accent">existieren</span><span class="dot">.</span>',
+        'pos.p1': 'Die Welt wird jeden Tag elektrifizierter, dezentraler und energieabh&auml;ngiger.',
+        'pos.p2': 'Dennoch sind Millionen Betriebe weiter auf teure, unflexible und CO₂-intensive Dieselerzeugung angewiesen.',
+        'pos.p3': '<strong>Saphira Systems</strong> baut eine neue Kategorie von Energie-Infrastruktur &mdash; verlegbare Solar-Hybrid-Systeme f&uuml;r abgelegene, netzunabh&auml;ngige und missionskritische Eins&auml;tze.',
+        'part.num': '<span>/09</span> &nbsp;&nbsp; PARTNERMODELL',
+        'part.label': 'Wie wir zusammenarbeiten',
+        'part.h2': 'Gemacht f&uuml;r Betreiber<br>und Integratoren.',
+        'part.intro': 'Saphira integriert die <strong>Sun2Fold</strong> Falt-PV-Plattform in eine vollst&auml;ndige Energiel&ouml;sung &mdash; und geht &uuml;ber <strong>lokale Partner</strong> in jeder Priorit&auml;tsregion in den Markt.',
+        'part.tA': '<span class="ptl-num">A</span>Technologie-Partnerschaft',
+        'part.tB': '<span class="ptl-num">B</span>Go-to-Market-Struktur',
+        'part.n1h': 'Integrierte Energiel&ouml;sung',
+        'part.n1p': 'Systemintegration, EMS, Hybrid-Architektur, verlegbare Verpackung, Partner-Enablement.',
+        'part.n2h': 'Falt-PV-Kerntechnologie',
+        'part.n3h': 'Die Infrastruktur',
+        'part.n3p': 'Komplette Energiel&ouml;sungs-Plattform. Portfolio, Systemintegration, Partner-Enablement.',
+        'part.n4h': 'Lokale Umsetzung',
+        'part.n4p': 'Lokaler Vertrieb und Projektabwicklung. EPC, Service, Kundenzugang. Marge pro Einheit und Projekt-Upside.',
+        'part.n5h': 'Schl&uuml;sselfertige Lieferung',
+        'part.n5p': 'Kauft eine schl&uuml;sselfertige Energiel&ouml;sung. Erh&auml;lt ein integriertes Angebot mit lokalem Servicenetz.',
+        'part.n2p': 'Patentierte faltbare PV-Plattform &amp; mechanisches IP. Saphiras exklusiver Technologiepartner.',
+        'part.step2': '02 &mdash; Lokaler EPC / Partner',
+        'part.step3': '03 &mdash; Endkunde',
+        'part.delLabel': 'Lieferung &amp; Projektabwicklung',
+        'part.delH3': 'Flexible Fertigung. <span class="accent">Produktion in &Ouml;sterreich.</span>',
+        'part.pd1h': 'Lieferzeit',
+        'part.pd1p': '~1&ndash;2 Monate EXW Standard. Verf&uuml;gbare Lagereinheiten erm&ouml;glichen ggf. schnelleren Einsatz.',
+        'part.pd2h': 'Individuelle Entwicklung',
+        'part.pd2p': 'Technische Spezifikationen werden gemeinsam mit dem Kunden in der Projektentwicklung abgestimmt.',
+        'part.pd3h': 'Skalierbare Kapazit&auml;t',
+        'part.pd3p': 'Produktionskapazit&auml;t skaliert mit der Projekt-Pipeline. Parallelproduktion f&uuml;r Mehr-Einheiten-Projekte.',
+        'part.pd4h': 'Logistik &amp; Incoterms',
+        'part.pd4p': 'Flexible Incoterm-Struktur je nach Kundenanforderung. Standard-Containerhandling weltweit.',
+        'part.gridH3': 'Eine margenstarke, schnell verlegbare<br>Solarl&ouml;sung f&uuml;r <span class="accent">neue Anwendungen</span>.',
+        'part.ps1': 'Bestellung bis Strom',
+        'part.ps2': 'Ausgelegte Lebensdauer',
+        'part.ps3': 'Struktur-Garantie',
+        'hero.eyebrow': 'EINSATZF&Auml;HIGE ENERGIE-INFRASTRUKTUR',
+        'hero.num': '<span>/01</span> &nbsp;&nbsp; PROLOG',
+        'hero.k1': 'Gesamtleistung',
+        'hero.k2': 'Auf-/Einfahren',
+        'hero.k3': 'Voll ausgefahren',
+        'hero.k4': 'PV-Module',
+        'hero.scroll': 'Scrollen',
+        'badge.eu': 'Entwickelt &amp; gefertigt in Europa',
+        'badge.tuv': 'T&Uuml;V S&uuml;d gepr&uuml;ft',
+        'badge.ce': 'CE-zertifiziert',
+        'apps.num': '<span>/05</span> &nbsp;&nbsp; ANWENDUNGEN',
+        'apps.label': 'Branchen&uuml;bergreifend im Einsatz',
+        'apps.h2': 'Wirkungsvolle Anwendungsf&auml;lle<br>f&uuml;r mobile, containerisierte Solaranlagen.',
+        'apps.c1.name': 'Bergbau &amp; Exploration',
+        'apps.c1.stmt': 'Diesel an abgelegenen Standorten ersetzen — Kosten und Treibstofflogistik senken.',
+        'apps.c1.desc': 'Kontinuierliche netzunabh&auml;ngige Energie f&uuml;r F&ouml;rderstandorte an der Rohstoff-Grenze. Dieselkosten um bis zu 80&nbsp;% senken. Treibstofflogistik eliminieren.',
+        'apps.c2.name': 'Bau &amp; Infrastruktur',
+        'apps.c2.stmt': 'Tempor&auml;re Energie f&uuml;r dynamische Baustellen — kein Netz n&ouml;tig.',
+        'apps.c2.desc': 'Tempor&auml;re Energie f&uuml;r dynamische Baustellen (6&ndash;24 Monate). Kein Netz n&ouml;tig. &Uuml;ber mehrere Projekte wiederverwendbar. Planbare Energiepreise.',
+        'apps.c3.name': 'Landwirtschaft &amp; abgelegene Standorte',
+        'apps.c3.stmt': 'Flexible Energie f&uuml;r Bew&auml;sserung, K&uuml;hlung und Verarbeitung.',
+        'apps.c3.desc': 'Solar-Infrastruktur f&uuml;r Bew&auml;sserung, K&uuml;hlung, Verarbeitung. Hybrid-f&auml;hig mit Pumpen und Speicher. Umsetzbare und skalierbare Architektur.',
+        'apps.c4.name': 'Katastrophenhilfe &amp; Einsatz',
+        'apps.c4.stmt': 'Sofortige Energie f&uuml;r kritische Infrastruktur und Krisenreaktion.',
+        'apps.c4.desc': 'Installation in Stunden. Inselbetrieb m&ouml;glich. Einfacher Transport an kritische Orte. Unterst&uuml;tzt Krisenreaktions-Infrastruktur.',
+        'apps.c5.name': 'Verteidigung &amp; kritische Infrastruktur',
+        'apps.c5.stmt': 'Mobile, resiliente Systeme f&uuml;r missionskritische Eins&auml;tze.',
+        'apps.c5.desc': 'Geringe thermische und akustische Signatur. Reduzierte Treibstofflogistik. Containerisierte PV direkt im Feld einsetzbar.',
+        'apps.c6.name': 'Inseln &amp; Off-Grid',
+        'apps.c6.stmt': 'Zuverl&auml;ssige, dezentrale Energie, wo Netze instabil sind.',
+        'apps.c6.desc': 'PV-Erzeugung vor Ort reduziert die Abh&auml;ngigkeit von teurem Dieselstrom. Arbeitet mit bestehenden Systemen. Skalierbar nach Bedarf.',
+        'map.num': '<span>/06</span> &nbsp;&nbsp; GLOBALER SOLARERTRAG',
+        'map.label': 'Mobiles Solar folgt der Sonne',
+        'map.h2': 'Entwickelt f&uuml;r <span class="accent">abgelegene, wachstumsstarke und ertragreiche</span> Energiem&auml;rkte weltweit.',
+        'map.legend': 'Spezifischer Jahresertrag (kWh / kWp / Jahr)',
         'deploy.num': '<span>/04</span> &nbsp;&nbsp; DEPLOYMENT-PROZESS',
         'deploy.label': 'Vom Transport zur Energie',
         'deploy.h2': 'Einmaliger Aufbau. <span class="accent">In 25 Min. wieder verlegbar.</span>',
@@ -12051,11 +12259,13 @@
     }
 
     function detectInitial() {
-      // v6 launch: forced English. Browser-locale auto-detect and localStorage
-      // are intentionally bypassed until DE/ES translations cover all sections.
-      // To re-enable: restore the previous body (saved + navigator.language fallback)
-      // and remove the .nav-lang { display: none } rule above.
-      try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+      // Default is always English. A visitor's manual choice (EN/DE) is remembered
+      // via localStorage. ES is intentionally excluded until its translation pass
+      // is complete (its button is hidden), so it can never be auto-selected.
+      try {
+        var saved = localStorage.getItem(STORAGE_KEY);
+        if (saved === 'de' || saved === 'en') return saved;
+      } catch (_) {}
       return 'en';
     }
 
