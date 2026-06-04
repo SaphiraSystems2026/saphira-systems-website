@@ -604,7 +604,10 @@
     text-transform: uppercase;
     color: var(--text-faint);
     z-index: 3;
-    display: flex;
+    /* Hidden: the centered bottom scroll cue overlapped the hero stats row
+       ("TOTAL OUTPUT" sat on top of "SCROLL"). The page obviously scrolls, so
+       the cue is redundant. Kept styled for easy re-enable (set display:flex). */
+    display: none;
     flex-direction: column;
     align-items: center;
     gap: 12px;
