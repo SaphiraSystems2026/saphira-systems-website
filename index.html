@@ -3693,7 +3693,7 @@
   <div class="nav-right">
     <div class="nav-lang" role="group" aria-label="Language">
       <button type="button" data-lang="en" aria-pressed="true">EN</button>
-      <button type="button" data-lang="de" aria-pressed="false">DE</button>
+      <button type="button" data-lang="de" aria-pressed="false" hidden>DE</button>
       <button type="button" data-lang="es" aria-pressed="false">ES</button>
     </div>
     <button class="nav-cta" data-i18n="nav.cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact</button>
@@ -7833,11 +7833,12 @@
     }
 
     function detectInitial() {
-      // Default is always English. A visitor's manual choice (EN/DE/ES) is
-      // remembered via localStorage; anything else falls back to English.
+      // Default is always English. Active languages: EN + ES.
+      // DE is temporarily disabled (its button is hidden and it's excluded here)
+      // but all DE dictionary entries are kept for quick re-activation later.
       try {
         var saved = localStorage.getItem(STORAGE_KEY);
-        if (saved === 'de' || saved === 'en' || saved === 'es') return saved;
+        if (saved === 'en' || saved === 'es') return saved;
       } catch (_) {}
       return 'en';
     }
