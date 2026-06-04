@@ -2410,6 +2410,14 @@
     border: 1px solid var(--line);
     padding: 36px 28px;
     position: relative;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  }
+  .partner-node:hover {
+    transform: translateY(-4px);
+    background: var(--saphira-dark-2);
+    border-color: var(--accent);
+    box-shadow: 0 14px 34px -14px rgba(242, 198, 61, 0.28);
   }
   .partner-node .p-step {
     font-size: 11px;
@@ -5116,6 +5124,9 @@
     nav.classList.add('visible');
     setTimeout(function() { intro.style.display = 'none'; }, 1400);
     document.body.style.overflow = 'auto';
+    // Hero KPIs are observed behind the intro overlay; start their count-up now
+    // that the page is actually visible, so the tick-up isn't wasted unseen.
+    if (typeof flushPendingCounts === 'function') flushPendingCounts();
   }
   document.body.style.overflow = 'hidden';
   introSkip.addEventListener('click', dismissIntro);
@@ -5132,6 +5143,73 @@
     revealEls.forEach(function(el) { io.observe(el); });
   } else {
     revealEls.forEach(function(el) { el.classList.add('in'); });
+  }
+
+  // ───── COUNT-UP (numbers tick up from 0 when scrolled into view) ─────
+  // Animates only clean single integers (134, 25, 52, ~150, ~50,000). Ranges
+  // ("10–15", "$0.25–1.00") and decimals are left static. rAF eased, one-shot.
+  var prefersReduced = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var countPending = [];
+
+  function runCount(el) {
+    var c = el.__count;
+    if (!c || c.done) return;
+    c.done = true;
+    var dur = 1400, t0 = null;
+    function step(ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      var eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      c.node.nodeValue = c.prefix + c.fmt(Math.round(c.target * eased));
+      if (p < 1) requestAnimationFrame(step);
+      else c.node.nodeValue = c.prefix + c.fmt(c.target);
+    }
+    requestAnimationFrame(step);
+  }
+  function flushPendingCounts() {
+    var q = countPending; countPending = [];
+    for (var i = 0; i < q.length; i++) runCount(q[i]);
+  }
+
+  if (!prefersReduced) {
+    var countEls = [];
+    var numNodes = document.querySelectorAll('.kpi-num, .impact-num');
+    Array.prototype.forEach.call(numNodes, function(el) {
+      var node = null, kk;
+      for (kk = 0; kk < el.childNodes.length; kk++) {
+        var n = el.childNodes[kk];
+        if (n.nodeType === 3 && /\d/.test(n.nodeValue)) { node = n; break; }
+      }
+      if (!node) return;
+      var raw = node.nodeValue;
+      if (/[–—]/.test(raw)) return;            // skip ranges (en/em dash)
+      var m = raw.match(/^(\D*?)(\d[\d,]*)(\.\d+)?/);
+      if (!m || m[3]) return;                            // skip if decimal present
+      var target = parseInt(m[2].replace(/,/g, ''), 10);
+      if (!isFinite(target)) return;
+      var hasComma = m[2].indexOf(',') > -1;
+      var fmt = hasComma
+        ? function(v) { return v.toLocaleString('en-US'); }
+        : function(v) { return String(v); };
+      el.__count = { node: node, prefix: m[1], target: target, fmt: fmt, done: false };
+      node.nodeValue = m[1] + fmt(0);
+      countEls.push(el);
+    });
+
+    if ('IntersectionObserver' in window) {
+      var cio = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (!e.isIntersecting) return;
+          cio.unobserve(e.target);
+          if (introDismissed) runCount(e.target);
+          else countPending.push(e.target);
+        });
+      }, { threshold: 0.5 });
+      countEls.forEach(function(el) { cio.observe(el); });
+    } else {
+      countEls.forEach(runCount);
+    }
   }
 
   // ───── NAV SCROLL ─────
