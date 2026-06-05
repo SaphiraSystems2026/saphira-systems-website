@@ -526,6 +526,30 @@
     animation: heroZoom 28s ease-in-out infinite alternate;
     will-change: transform;
   }
+  /* Drone-loop video sits over the static .hero-image (which stays as poster /
+     fallback). Same geometry + left-edge mask so the headline stays readable. */
+  .hero-video {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 72%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center right;
+    z-index: 1;
+    -webkit-mask-image: linear-gradient(to right,
+        transparent 0%,
+        rgba(0,0,0,0.35) 14%,
+        rgba(0,0,0,0.85) 32%,
+        black 48%,
+        black 100%);
+    mask-image: linear-gradient(to right,
+        transparent 0%,
+        rgba(0,0,0,0.35) 14%,
+        rgba(0,0,0,0.85) 32%,
+        black 48%,
+        black 100%);
+  }
   @keyframes heroZoom {
     0%   { transform: scale(1.02) translateX(0); }
     100% { transform: scale(1.10) translateX(-1.5%); }
@@ -626,7 +650,7 @@
     50% { transform: scaleY(0.5); opacity: 0.4; }
   }
   @media (max-width: 1100px) {
-    .hero-image { width: 88%; opacity: 0.7; }
+    .hero-image, .hero-video { width: 88%; opacity: 0.7; }
   }
   @media (max-width: 900px) {
     /* Belt-and-suspenders: never allow the page to scroll sideways on mobile.
@@ -641,6 +665,8 @@
     /* On mobile the image becomes a faint atmospheric backdrop.
        Disable the ken-burns zoom — its scale(1.1) pushed the image past the
        viewport and produced a horizontal scrollbar. */
+    /* Mobile keeps the lightweight static backdrop; no video download on phones. */
+    .hero-video { display: none; }
     .hero-image {
       width: 100%;
       max-width: 100%;
@@ -3718,6 +3744,11 @@
 <section id="hero">
   <canvas id="hero-canvas"></canvas>
   <div class="hero-image" role="img" aria-label="Saphira Core deployed at a quarry site"></div>
+  <video class="hero-video" autoplay muted loop playsinline preload="metadata"
+         poster="hero-saphira-core.jpg" aria-hidden="true">
+    <source src="hero-saphira-core.webm" type="video/webm">
+    <source src="hero-saphira-core.mp4"  type="video/mp4">
+  </video>
   <div class="hero-gradient"></div>
   <div class="container hero-content">
     <div class="section-num" data-i18n="hero.num" data-i18n-html><span>/01</span> &nbsp;&nbsp; PROLOGUE</div>
