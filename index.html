@@ -498,6 +498,10 @@
   #hero { min-height: 100vh; overflow: hidden; padding-top: 100px; padding-bottom: 60px; display: flex; flex-direction: column; }
   #hero-canvas { position: absolute; inset: 0; z-index: 0; }
   .hero-image {
+    /* Hidden on desktop/tablet — the video replaces it there (and showing it
+       behind the masked video produced a faint ghost of the old hero image).
+       Re-enabled only on mobile as a lightweight backdrop (see media query). */
+    display: none;
     position: absolute;
     top: 0;
     right: 0;
@@ -650,7 +654,7 @@
     50% { transform: scaleY(0.5); opacity: 0.4; }
   }
   @media (max-width: 1100px) {
-    .hero-image, .hero-video { width: 88%; opacity: 0.7; }
+    .hero-video { width: 88%; opacity: 0.7; }
   }
   @media (max-width: 900px) {
     /* Belt-and-suspenders: never allow the page to scroll sideways on mobile.
@@ -668,6 +672,7 @@
     /* Mobile keeps the lightweight static backdrop; no video download on phones. */
     .hero-video { display: none; }
     .hero-image {
+      display: block;
       width: 100%;
       max-width: 100%;
       opacity: 0.35;
@@ -3745,7 +3750,7 @@
   <canvas id="hero-canvas"></canvas>
   <div class="hero-image" role="img" aria-label="Saphira Core deployed at a quarry site"></div>
   <video class="hero-video" autoplay muted loop playsinline preload="metadata"
-         poster="hero-saphira-core.jpg" aria-hidden="true">
+         poster="hero-video-poster.jpg" aria-hidden="true">
     <source src="hero-saphira-core.webm" type="video/webm">
     <source src="hero-saphira-core.mp4"  type="video/mp4">
   </video>
