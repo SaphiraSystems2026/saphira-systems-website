@@ -1386,18 +1386,11 @@
     display: block;
     overflow: visible;
   }
-  /* On phones the 1100-wide diagram scaled down to ~335px and the labels became
-     unreadable. Let it keep a legible size and scroll horizontally instead. */
+  /* On phones, scale the diagram to fit within the section frame — no horizontal
+     scroll, no bleed past the surrounding content. */
   @media (max-width: 700px) {
-    .energy-flow .ef-stage {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      /* fade the right edge as a scroll affordance */
-      -webkit-mask-image: linear-gradient(to right, black 92%, transparent 100%);
-      mask-image: linear-gradient(to right, black 92%, transparent 100%);
-      padding-bottom: 8px;
-    }
-    .energy-flow .ef-svg { min-width: 720px; overflow: hidden; }
+    .energy-flow .ef-stage { overflow-x: hidden; }
+    .energy-flow .ef-svg { min-width: 0; width: 100%; }
   }
   /* Power-balance equation line (above legend) */
   .energy-flow .ef-balance {
@@ -5582,7 +5575,8 @@
       var topAng=Math.atan2(lerpP(tfr,tbr,0.5).y-lerpP(tfl,tbl,0.5).y, lerpP(tfr,tbr,0.5).x-lerpP(tfl,tbl,0.5).x);
       ctx.save(); ctx.translate(topC.x, topC.y); ctx.rotate(topAng);
       ctx.fillStyle='#F2C63D'; ctx.font='700 '+(7*dpr)+'px Inter'; ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText('SAPHIRA  CORE', 0, 0); ctx.restore();
+      if (!mobileMQ.matches) ctx.fillText('SAPHIRA  CORE', 0, 0);   // label omitted on phones (too large at small scale)
+      ctx.restore();
       ctx.fillStyle='#0e1014'; poly([bfl,bfr,tfr,tfl]); ctx.fill(); ctx.strokeStyle='#F2C63D'; ctx.lineWidth=1*dpr; ctx.stroke();
       var HAP=0.58;
       function seg(p0,p1,fill){
