@@ -1754,6 +1754,18 @@
     .energy-flow .ef-sc-btn .sc-desc { font-size: 9px; line-height: 1.25; }
   }
 
+  /* Desktop/tablet: stack diagram → all scenarios → balance → legend with trimmed
+     spacing so the whole interactive block fits on one screen without scrolling. */
+  @media (min-width: 701px) {
+    .energy-flow { display: flex; flex-direction: column; }
+    .energy-flow .ef-head       { order: 0; margin-bottom: 16px; }
+    .energy-flow .ef-stage      { order: 1; max-width: 980px; margin: 0 auto; }
+    .energy-flow .ef-scenarios  { order: 2; margin-top: 14px; padding-top: 16px; }
+    .energy-flow .ef-balance    { order: 3; margin-top: 14px; }
+    .energy-flow .ef-legend     { order: 4; margin-top: 12px; padding-top: 16px; }
+    .energy-flow .ef-disclaimer { order: 5; margin-top: 16px; }
+  }
+
   /* ═══════ APPLICATIONS ═══════ */
   #applications { background: var(--bg-deep); padding: 140px 0; }
   .apps-header { padding: 0 48px; margin-bottom: 80px; max-width: 900px; }
