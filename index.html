@@ -1550,7 +1550,7 @@
   }
 
   .ef-svg .ef-source {
-    cursor: pointer;
+    cursor: default;   /* sources are display-only — controlled via the scenario buttons */
     transition: opacity 0.3s;
   }
   .ef-svg .ef-source .src-diamond {
@@ -6314,13 +6314,9 @@
       markActiveScenario(findMatchingScenario());
     }
 
-    // Click source → toggle
+    // Sources are display-only — controlled via the scenario buttons (no direct toggle).
     all('.ef-source').forEach(function(src) {
       var key = src.dataset.source;
-      src.addEventListener('click', function() {
-        state[key] = !state[key];
-        recompute();
-      });
       src.addEventListener('mouseenter', function() {
         if (svg) svg.classList.add('hovering');
         src.classList.add('hover-active');
