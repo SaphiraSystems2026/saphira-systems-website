@@ -5376,9 +5376,11 @@
     // deploy sequence on a timer once it's on screen.
     var autoT0 = 0, autoManual = false, AUTO_MS = 9000;
 
+    var S;
     function resize() {
       W = canvas.width = canvas.offsetWidth * dpr;
       H = canvas.height = canvas.offsetHeight * dpr;
+      S = makeScene();
     }
     resize();
     window.addEventListener('resize', resize);
@@ -5483,380 +5485,231 @@
 
     var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // ── Helpers ──
-    function drawGround() {
-      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-      ctx.lineWidth = 1;
-      for (var i = 0; i < 14; i++) {
-        var y = H * 0.7 + i * 7 * dpr;
-        ctx.beginPath();
-        ctx.moveTo(W * (0.05 - i*0.015), y);
-        ctx.lineTo(W * (0.95 + i*0.015), y);
-        ctx.globalAlpha = 0.4 - i*0.025;
-        ctx.stroke();
-      }
-      ctx.globalAlpha = 1;
-      ctx.strokeStyle = 'rgba(242,198,61,0.18)';
-      ctx.beginPath();
-      ctx.moveTo(0, H * 0.55);
-      ctx.lineTo(W, H * 0.55);
-      ctx.stroke();
+    // ── 3D isometric deployment scene (ported from deploy_3d.html) ──
+    var OPEN_H = 0.30, FOLD_H = 2.00;
+    var C_W = 0.96, C_LEN = 0.85, C_H = 1.40;   // 20ft HC 20'x8'x9'6" → length(2*C_W):width(C_LEN):height ≈ 2.5:1:1.19
+    var ARR_W = 0.86;
+    var LIFT_F = 0.055;
+
+    function makeScene() {
+      var k = Math.min(1, H / (W * (9/40)));   // only shrink on extremely flat stages; scene tuned to fill the wide homepage stage
+      var O = { x: 0.120*W, y: 0.400*H }, step = 0.0450*W*k;   // container further left, longer array fills the width
+      var EX = { x: 0.900*step, y: 0.140*step };               // flatter depth tilt (less "downhill")
+      var EWx = 0.86, EWy = -0.52, EWl = Math.hypot(EWx, EWy), EWu = { x: EWx/EWl, y: EWy/EWl };
+      var halfW = 0.0450*W*k, HT0 = 0.0296*W*k, N = 12, growth = 0.06, sizeGrowth = 0.35, DEP0 = 0.46;   // HT0 W-based so container/tent height stays proportional at any stage aspect
+      function EX_len(a){ return a + 0.5*growth*a*a; }
+      function rowScale(a){ return 1 + sizeGrowth*Math.max(0,a)/N; }
+      function P(a,b,h){ var sc=rowScale(a),ua=EX_len(a),x=O.x+EX.x*ua,y=O.y+EX.y*ua,w=halfW*sc;
+        x+=EWu.x*(b*w); y+=EWu.y*(b*w); y+=-(h*HT0*sc); return {x:x,y:y}; }
+      return { O:O,EX:EX,EWu:EWu,halfW:halfW,HT0:HT0,N:N,DEP0:DEP0,rowScale:rowScale,EX_len:EX_len,P:P, k:k };
     }
 
-    function drawContainer(cx, cy, w, h) {
-      // Body
-      ctx.fillStyle = '#1F2128';
-      ctx.fillRect(cx - w/2, cy - h/2, w, h);
-      ctx.strokeStyle = '#F2C63D';
-      ctx.lineWidth = 1*dpr;
-      ctx.strokeRect(cx - w/2, cy - h/2, w, h);
-      // Corrugation
-      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-      for (var k = 1; k < 11; k++) {
-        var rx = cx - w/2 + (w / 11) * k;
-        ctx.beginPath(); ctx.moveTo(rx, cy - h/2 + 4); ctx.lineTo(rx, cy + h/2 - 4); ctx.stroke();
-      }
-      // Mini Saphira logo line
-      ctx.save();
-      ctx.translate(cx - 25*dpr, cy - 4*dpr);
-      ctx.strokeStyle = '#F2C63D';
-      ctx.lineWidth = 1.2*dpr;
-      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      ctx.beginPath();
-      ctx.moveTo(0, 4*dpr);
-      ctx.lineTo(1.5*dpr, 0);
-      ctx.lineTo(3.5*dpr, 4*dpr);
-      ctx.lineTo(10*dpr, 2*dpr);
-      ctx.lineTo(16.5*dpr, 4*dpr);
-      ctx.lineTo(18.5*dpr, 3.5*dpr);
-      ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(18.5*dpr, 3.5*dpr); ctx.lineTo(24*dpr, 2*dpr); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(24*dpr, 2*dpr); ctx.lineTo(30.5*dpr, 4*dpr); ctx.stroke();
-      ctx.restore();
-      // SAPHIRA CORE text
-      ctx.fillStyle = '#F2C63D';
-      ctx.font = '700 ' + (9*dpr) + 'px Inter';
-      ctx.textAlign = 'center';
-      ctx.fillText('SAPHIRA  CORE', cx, cy + 14*dpr);
-      // Corner castings
-      ctx.fillStyle = '#F2C63D';
-      [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(c) {
-        ctx.fillRect(cx + c[0]*w/2 - 3*dpr, cy + c[1]*h/2 - 3*dpr, 6*dpr, 6*dpr);
-      });
+    function poly(p){ ctx.beginPath(); ctx.moveTo(p[0].x,p[0].y); for(var i=1;i<p.length;i++) ctx.lineTo(p[i].x,p[i].y); ctx.closePath(); }
+    function line(a,b){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+    function lerpP(p,q,f){ return {x:p.x+(q.x-p.x)*f, y:p.y+(q.y-p.y)*f}; }
+    function clamp01(v){ return Math.max(0,Math.min(1,v)); }
+    function ellipse(cx,cy,rx,ry){ var pts=[]; for(var i=0;i<14;i++){ var an=i/14*Math.PI*2; pts.push({x:cx+Math.cos(an)*rx,y:cy+Math.sin(an)*ry}); } poly(pts); }
+
+    function drawSun(){
+      var sx=W*0.84, sy=H*0.17;
+      var g=ctx.createRadialGradient(sx,sy,0,sx,sy,H*0.62);   // contained ambient glow
+      g.addColorStop(0,'rgba(242,198,61,0.13)'); g.addColorStop(0.4,'rgba(242,198,61,0.04)'); g.addColorStop(1,'rgba(242,198,61,0)');
+      ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+      var c=ctx.createRadialGradient(sx,sy,0,sx,sy,H*0.085);  // smaller, crisper disc
+      c.addColorStop(0,'rgba(247,247,245,0.9)'); c.addColorStop(0.55,'rgba(242,198,61,0.55)'); c.addColorStop(1,'rgba(242,198,61,0)');
+      ctx.fillStyle=c; ctx.beginPath(); ctx.arc(sx,sy,H*0.085,0,Math.PI*2); ctx.fill();
     }
-
-    function drawTruck(cx, cy, cW, cH) {
-      // Truck cab on RIGHT of container (since truck drives right→left, cab is in front = right)
-      var cabW = 56*dpr, cabH = cH * 0.92;
-      var cabX = cx + cW/2 + 6*dpr;
-      var cabY = cy - cH/2 + (cH - cabH);
-      ctx.fillStyle = '#1F2128';
-      ctx.fillRect(cabX, cabY, cabW, cabH);
-      ctx.strokeStyle = '#F2C63D';
-      ctx.lineWidth = 1*dpr;
-      ctx.strokeRect(cabX, cabY, cabW, cabH);
-      // Cab roof slope
-      ctx.beginPath();
-      ctx.moveTo(cabX, cabY);
-      ctx.lineTo(cabX + cabW*0.45, cabY - 14*dpr);
-      ctx.lineTo(cabX + cabW, cabY);
-      ctx.stroke();
-      // Window
-      ctx.fillStyle = 'rgba(242,198,61,0.18)';
-      ctx.fillRect(cabX + 8*dpr, cabY + 10*dpr, cabW - 16*dpr, 18*dpr);
-      ctx.strokeStyle = 'rgba(242,198,61,0.5)';
-      ctx.strokeRect(cabX + 8*dpr, cabY + 10*dpr, cabW - 16*dpr, 18*dpr);
-      // Connector trailer↔cab
-      ctx.strokeStyle = 'rgba(242,198,61,0.4)';
-      ctx.lineWidth = 1.5*dpr;
-      ctx.beginPath();
-      ctx.moveTo(cx + cW/2, cy);
-      ctx.lineTo(cabX, cy);
-      ctx.stroke();
-      drawContainer(cx, cy, cW, cH);
-      // Wheels
-      var wheelY = cy + cH/2 + 9*dpr;
-      var wheelR = 9*dpr;
-      var wheels = [
-        cx - cW*0.45, cx - cW*0.28, cx - cW*0.05, cx + cW*0.18, cx + cW*0.4,
-        cabX + cabW*0.22, cabX + cabW*0.78
-      ];
-      ctx.fillStyle = '#0a0d12';
-      ctx.strokeStyle = 'rgba(242,198,61,0.55)';
-      ctx.lineWidth = 1*dpr;
-      wheels.forEach(function(wx) {
-        ctx.beginPath();
-        ctx.arc(wx, wheelY, wheelR, 0, Math.PI*2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(wx, wheelY, wheelR * 0.45, 0, Math.PI*2);
-        ctx.stroke();
-      });
-      // Road
-      ctx.strokeStyle = 'rgba(242,198,61,0.22)';
-      ctx.lineWidth = 1*dpr;
-      ctx.beginPath();
-      ctx.moveTo(0, wheelY + wheelR + 2*dpr);
-      ctx.lineTo(W, wheelY + wheelR + 2*dpr);
-      ctx.stroke();
-      // Road dashes moving leftward (truck reference frame)
-      if (!prefersReducedMotion) {
-        ctx.strokeStyle = 'rgba(242,198,61,0.30)';
-        ctx.setLineDash([6*dpr, 12*dpr]);
-        ctx.lineDashOffset = ((Date.now() / 35) * dpr) % (18*dpr);
-        ctx.beginPath();
-        ctx.moveTo(0, wheelY + wheelR + 14*dpr);
-        ctx.lineTo(W, wheelY + wheelR + 14*dpr);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
+    function drawGroundGrid(){
+      ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1*dpr;
+      for(var a=-1;a<=S.N+1;a++) line(S.P(a,-1.3,0), S.P(a,1.3,0));
+      for(var bi=-3;bi<=3;bi++){ var b=bi/2.3; line(S.P(-1,b,0), S.P(S.N+1,b,0)); }
     }
+    function drawGround(){ drawSun(); drawGroundGrid(); }
 
-    function drawContainerDoorSide(cx, cy, w, h) {
-      // Container seen from short (door) side — narrower, taller
-      ctx.fillStyle = '#1F2128';
-      ctx.fillRect(cx - w/2, cy - h/2, w, h);
-      ctx.strokeStyle = '#F2C63D';
-      ctx.lineWidth = 1*dpr;
-      ctx.strokeRect(cx - w/2, cy - h/2, w, h);
-      // Door split (vertical line in middle)
-      ctx.strokeStyle = 'rgba(242,198,61,0.55)';
-      ctx.lineWidth = 1*dpr;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - h/2 + 6*dpr);
-      ctx.lineTo(cx, cy + h/2 - 6*dpr);
-      ctx.stroke();
-      // Locking rods
-      ctx.strokeStyle = 'rgba(242,198,61,0.32)';
-      ctx.lineWidth = 0.7*dpr;
-      [cx - w*0.20, cx - w*0.08, cx + w*0.08, cx + w*0.20].forEach(function(rx) {
-        ctx.beginPath();
-        ctx.moveTo(rx, cy - h/2 + 5*dpr);
-        ctx.lineTo(rx, cy + h/2 - 5*dpr);
-        ctx.stroke();
-      });
-      // Door handles
-      ctx.fillStyle = '#F2C63D';
-      ctx.fillRect(cx - 8*dpr, cy - 5*dpr, 2.5*dpr, 12*dpr);
-      ctx.fillRect(cx + 5.5*dpr, cy - 5*dpr, 2.5*dpr, 12*dpr);
-      // Mini Saphira line + text near top
-      ctx.save();
-      ctx.translate(cx - 16*dpr, cy - h/2 + 14*dpr);
-      ctx.strokeStyle = '#F2C63D';
-      ctx.lineWidth = 1.0*dpr;
-      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      ctx.beginPath();
-      ctx.moveTo(0, 4*dpr);
-      ctx.lineTo(1.2*dpr, 0);
-      ctx.lineTo(2.8*dpr, 4*dpr);
-      ctx.lineTo(8*dpr, 2*dpr);
-      ctx.lineTo(13.2*dpr, 4*dpr);
-      ctx.lineTo(14.8*dpr, 3.5*dpr);
-      ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(14.8*dpr, 3.5*dpr); ctx.lineTo(19.2*dpr, 2*dpr); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(19.2*dpr, 2*dpr); ctx.lineTo(24.4*dpr, 4*dpr); ctx.stroke();
-      ctx.restore();
-      ctx.fillStyle = '#F2C63D';
-      ctx.font = '700 ' + (6.5*dpr) + 'px Inter';
-      ctx.textAlign = 'center';
-      ctx.fillText('SAPHIRA  CORE', cx, cy - h/2 + 30*dpr);
-      // Corner castings
-      ctx.fillStyle = '#F2C63D';
-      [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(c) {
-        ctx.fillRect(cx + c[0]*w/2 - 3*dpr, cy + c[1]*h/2 - 3*dpr, 6*dpr, 6*dpr);
-      });
-    }
-
-    function drawStripFoundationsShort(cx, cy, w, h) {
-      // Taller strip foundations that lift the container so its bottom = rail height
-      var blockW = 16*dpr;
-      var blockH = 16*dpr;
-      var blockY = cy + h/2;
-      var leftX = cx - w/2 + 2*dpr;
-      var rightX = cx + w/2 - blockW - 2*dpr;
-      ctx.fillStyle = '#252830';
-      ctx.strokeStyle = 'rgba(242,198,61,0.45)';
-      ctx.lineWidth = 0.8*dpr;
-      ctx.fillRect(leftX, blockY, blockW, blockH);
-      ctx.strokeRect(leftX, blockY, blockW, blockH);
-      ctx.fillRect(rightX, blockY, blockW, blockH);
-      ctx.strokeRect(rightX, blockY, blockW, blockH);
-      // Hatching
-      ctx.strokeStyle = 'rgba(255,255,255,0.10)';
-      ctx.lineWidth = 0.5*dpr;
-      for (var l = 1; l < 4; l++) {
-        ctx.beginPath(); ctx.moveTo(leftX + (blockW/4)*l, blockY + 2*dpr); ctx.lineTo(leftX + (blockW/4)*l, blockY + blockH - 2*dpr); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(rightX + (blockW/4)*l, blockY + 2*dpr); ctx.lineTo(rightX + (blockW/4)*l, blockY + blockH - 2*dpr); ctx.stroke();
+    function drawFoundations(alpha){
+      if(alpha<=0.01) return; ctx.save(); ctx.globalAlpha=alpha;
+      var aF=-0.32, aB=aF-C_LEN, bh=12*dpr, dd=0.085, hw=0.085;
+      function blk(a,b){
+        var g00=S.P(a-dd,b-hw,0), g10=S.P(a+dd,b-hw,0), g11=S.P(a+dd,b+hw,0), g01=S.P(a-dd,b+hw,0);
+        function up(p){ return {x:p.x,y:p.y-bh}; }
+        ctx.strokeStyle='rgba(0,0,0,0.4)'; ctx.lineWidth=0.6*dpr;
+        ctx.fillStyle='#5d5d56'; poly([g00,g10,up(g10),up(g00)]); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#51514b'; poly([g10,g11,up(g11),up(g10)]); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#92928a'; poly([up(g00),up(g10),up(g11),up(g01)]); ctx.fill(); ctx.stroke();
+        ctx.strokeStyle='rgba(0,0,0,0.18)'; ctx.lineWidth=0.5*dpr;
+        line(lerpP(up(g00),up(g11),0.5), lerpP(up(g10),up(g01),0.5));
       }
-    }
-
-    function _arrayGeometry(cx, cW, cH) {
-      // Shared geometry for supports / rails / tents
-      var startX = cx + cW/2 + 14*dpr;
-      var endX = W * 0.94;
-      return {
-        startX: startX,
-        endX: endX,
-        availableW: endX - startX,
-        supportH: 16*dpr,
-        railY: 0,        // filled below by caller
-        baseY: 0
-      };
-    }
-
-    function drawSupportsOnly(cx, cy, cW, cH, progress) {
-      // Step 2: ONLY the corner supports appear in sequence (no rails yet)
-      var g = _arrayGeometry(cx, cW, cH);
-      var nSupports = 12;
-      var step = g.availableW / (nSupports - 1);
-      var railY = cy + cH/2; // rail aligns with container bottom; supports drop to ground below
-      var supportsToShow = Math.ceil(nSupports * progress);
-
-      ctx.strokeStyle = '#F2C63D';
-      ctx.lineWidth = 1.5*dpr;
-      for (var i = 0; i < supportsToShow; i++) {
-        var sx = g.startX + step * i;
-        ctx.beginPath();
-        ctx.moveTo(sx, railY);
-        ctx.lineTo(sx, railY + g.supportH);
-        ctx.stroke();
-        ctx.fillStyle = '#F2C63D';
-        ctx.fillRect(sx - 4*dpr, railY + g.supportH - 2*dpr, 8*dpr, 3*dpr);
-      }
-    }
-
-    function drawRails(cx, cy, cW, cH, progress) {
-      // Step 3: Single Laufschiene laid out at container-bottom level
-      var g = _arrayGeometry(cx, cW, cH);
-      var railY = cy + cH/2;
-      var revealX = g.startX + g.availableW * progress;
-
-      ctx.strokeStyle = 'rgba(242,198,61,0.85)';
-      ctx.lineWidth = 1.5*dpr;
-      ctx.beginPath();
-      ctx.moveTo(g.startX, railY);
-      ctx.lineTo(revealX, railY);
-      ctx.stroke();
-    }
-
-    function drawPVArrayRight(cx, cy, cW, cH, progress) {
-      // Step 4: Conveyor-style emergence. Each new tent emerges from the container,
-      // rises to its apex (like the Saphira logo line), then is pushed right by
-      // the next emerging tent. First-emerged tent ends up farthest from container.
-      var g = _arrayGeometry(cx, cW, cH);
-      var nTents = 10;
-      var tentW = g.availableW / nTents;
-      var baseY = cy + cH/2; // tent base sits on rail (= container bottom level)
-      var apexH = 16*dpr;
-
-      var emergeProgress = progress * nTents;
-      var currentEmerging = Math.min(nTents, Math.floor(emergeProgress));
-      var subProgress = emergeProgress - currentEmerging;
-
-      // Folded vs unfolded geometry per tent
-      // FOLDED state: tall + narrow (like the first peak in the Saphira logo)
-      // UNFOLDED state: normal A-frame (wide base, normal apex)
-      var foldedApexH = apexH * 2.2;
-      var foldedHalfW = tentW * 0.10;
-      var unfoldedHalfW = tentW * 0.5;
-
-      function drawTent(slotPos, unfoldT) {
-        // unfoldT: 0 (folded) → 1 (fully unfolded)
-        var xCenter = g.startX + slotPos * tentW + tentW/2;
-        var ah = foldedApexH + (apexH - foldedApexH) * unfoldT;       // apex drops as it unfolds
-        var hw = foldedHalfW + (unfoldedHalfW - foldedHalfW) * unfoldT; // base spreads outward
-        var apexY = baseY - ah;
-        var xL = xCenter - hw;
-        var xR = xCenter + hw;
-        // Tent triangle
-        ctx.fillStyle = '#1d3050';
-        ctx.strokeStyle = 'rgba(242,198,61,0.7)';
-        ctx.lineWidth = 0.7*dpr;
-        ctx.beginPath();
-        ctx.moveTo(xL, baseY);
-        ctx.lineTo(xCenter, apexY);
-        ctx.lineTo(xR, baseY);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        // Apex centerline (subtle vertical)
-        ctx.strokeStyle = 'rgba(242,198,61,0.4)';
-        ctx.lineWidth = 0.4*dpr;
-        ctx.beginPath();
-        ctx.moveTo(xCenter, apexY);
-        ctx.lineTo(xCenter, baseY);
-        ctx.stroke();
-      }
-
-      // Clip to rail area so emerging tent stays hidden inside container until past edge
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(g.startX, baseY - foldedApexH - 6*dpr, g.availableW + 5*dpr, foldedApexH + 12*dpr);
-      ctx.clip();
-
-      // Already-emerged tents, pushed right by sub_progress, fully unfolded
-      for (var i = 0; i < currentEmerging; i++) {
-        var slotPos = (currentEmerging - 1 - i) + subProgress;
-        drawTent(slotPos, 1);
-      }
-
-      // Active tent: emerging FOLDED (tall narrow peak), unfolds as it slides out
-      if (currentEmerging < nTents) {
-        var activeSlot = subProgress - 1;      // -1 (hidden in container) → 0 (just emerged)
-        drawTent(activeSlot, subProgress);     // unfolds in sync with emergence
-      }
-
+      [[aF,-1],[aF,1],[aB,-1]].forEach(function(c){ blk(c[0], c[1]*C_W); });
       ctx.restore();
     }
-
-    function drawEnergyGlow(cx, cy) {
-      var t = Date.now() / 1000;
-      var glowR = 70*dpr + Math.sin(t*2) * 10*dpr;
-      var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowR);
-      grad.addColorStop(0, 'rgba(242,198,61,0.5)');
-      grad.addColorStop(1, 'rgba(242,198,61,0)');
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, glowR, 0, Math.PI*2);
-      ctx.fill();
-      // Sparkle particles
-      for (var sp = 0; sp < 5; sp++) {
-        var ang = t + sp * Math.PI / 2.5;
-        var rr = 90*dpr + (sp % 2) * 25*dpr;
-        var sxx = cx + Math.cos(ang) * rr;
-        var syy = cy + Math.sin(ang) * rr * 0.4;
-        ctx.fillStyle = '#F2C63D';
-        ctx.beginPath();
-        ctx.arc(sxx, syy, 2*dpr, 0, Math.PI*2);
-        ctx.fill();
+    function drawContainerLegs(liftPx, grow){
+      grow = clamp01(grow); if(grow<=0.01) return;
+      var aF=-0.32, aB=aF-C_LEN;
+      [[aF,1],[aF,-1],[aB,-1]].forEach(function(c){
+        var g=S.P(c[0], c[1]*C_W, 0);
+        var topY=g.y - liftPx*grow;
+        ctx.strokeStyle='#F2C63D'; ctx.lineWidth=1.7*dpr; ctx.lineCap='round';
+        ctx.beginPath(); ctx.moveTo(g.x, g.y-9*dpr); ctx.lineTo(g.x, topY); ctx.stroke(); ctx.lineCap='butt';
+      });
+    }
+    function drawCraneHook(tc, alpha){
+      ctx.save(); ctx.globalAlpha=alpha;
+      var hookY=tc.y-11*dpr;
+      ctx.strokeStyle='rgba(242,198,61,0.6)'; ctx.lineWidth=1.3*dpr;
+      ctx.beginPath(); ctx.moveTo(tc.x,0); ctx.lineTo(tc.x,hookY); ctx.stroke();
+      ctx.fillStyle='#2b2f39'; ctx.strokeStyle='#F2C63D'; ctx.lineWidth=1*dpr;
+      ctx.fillRect(tc.x-5*dpr,hookY-7*dpr,10*dpr,9*dpr); ctx.strokeRect(tc.x-5*dpr,hookY-7*dpr,10*dpr,9*dpr);
+      ctx.strokeStyle='rgba(242,198,61,0.5)'; ctx.lineWidth=0.8*dpr;
+      ctx.beginPath(); ctx.moveTo(tc.x,hookY+2*dpr); ctx.lineTo(tc.x-16*dpr,tc.y+4*dpr); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(tc.x,hookY+2*dpr); ctx.lineTo(tc.x+16*dpr,tc.y+4*dpr); ctx.stroke();
+      ctx.restore();
+    }
+    function drawContainer(aShift, liftPx, doorOpen){
+      doorOpen = doorOpen || 0;
+      var aF=-0.32+aShift, aB=aF-C_LEN, bW=C_W, hT=C_H;
+      function C(a,b,h){ var p=S.P(a,b*bW,h*hT); return {x:p.x,y:p.y-liftPx}; }
+      function D(a,B,h){ var p=S.P(a,B,h*hT); return {x:p.x,y:p.y-liftPx}; }
+      var bfl=C(aF,-1,0),bfr=C(aF,1,0),bbl=C(aB,-1,0),bbr=C(aB,1,0);
+      var tfl=C(aF,-1,1),tfr=C(aF,1,1),tbl=C(aB,-1,1),tbr=C(aB,1,1);
+      ctx.save(); ctx.globalAlpha=0.4; ctx.fillStyle='rgba(0,0,0,0.4)';
+      poly([S.P(aB,-bW,0),S.P(aB,bW,0),S.P(aF,bW,0),S.P(aF,-bW,0)]); ctx.fill(); ctx.restore();
+      ctx.lineWidth=1*dpr;
+      ctx.fillStyle='#2b2f39'; ctx.strokeStyle='#F2C63D'; poly([tbl,tbr,tfr,tfl]); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#20242c'; poly([bfl,bbl,tbl,tfl]); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=0.6*dpr;
+      for(var k=1;k<5;k++){ var f=k/5; line(lerpP(bfl,bbl,f), lerpP(tfl,tbl,f)); }
+      var topC=lerpP(lerpP(tfl,tbl,0.5), lerpP(tfr,tbr,0.5), 0.5);
+      var topAng=Math.atan2(lerpP(tfr,tbr,0.5).y-lerpP(tfl,tbl,0.5).y, lerpP(tfr,tbr,0.5).x-lerpP(tfl,tbl,0.5).x);
+      ctx.save(); ctx.translate(topC.x, topC.y); ctx.rotate(topAng);
+      ctx.fillStyle='#F2C63D'; ctx.font='700 '+(7*dpr)+'px Inter'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText('SAPHIRA  CORE', 0, 0); ctx.restore();
+      ctx.fillStyle='#0e1014'; poly([bfl,bfr,tfr,tfl]); ctx.fill(); ctx.strokeStyle='#F2C63D'; ctx.lineWidth=1*dpr; ctx.stroke();
+      var HAP=0.58;
+      function seg(p0,p1,fill){
+        var b0=D(p0[0],p0[1],0),t0=D(p0[0],p0[1],1),b1=D(p1[0],p1[1],0),t1=D(p1[0],p1[1],1);
+        ctx.fillStyle=fill; ctx.strokeStyle='#F2C63D'; ctx.lineWidth=0.9*dpr;
+        poly([b0,b1,t1,t0]); ctx.fill(); ctx.stroke();
+        ctx.strokeStyle='rgba(242,198,61,0.32)'; ctx.lineWidth=0.7*dpr;
+        [0.34,0.66].forEach(function(f){ line(lerpP(b0,b1,f), lerpP(t0,t1,f)); });
+        ctx.strokeStyle='rgba(255,255,255,0.10)'; ctx.lineWidth=0.5*dpr;
+        line(lerpP(b0,t0,0.16), lerpP(b1,t1,0.16));
+        line(lerpP(b0,t0,0.84), lerpP(b1,t1,0.84));
       }
-      // Sun — animated trajectory from LEFT to RIGHT across the sky
-      var sunCycleT = prefersReducedMotion ? 0.5 : (Date.now() / 12000) % 1;
-      var sunX = W * 0.10 + W * 0.80 * sunCycleT;
-      // Subtle arc: highest at midday (cycleT=0.5)
-      var sunY = H * 0.22 - Math.sin(Math.PI * sunCycleT) * (H * 0.06);
-      // Outer glow
-      ctx.fillStyle = 'rgba(242,198,61,0.3)';
-      ctx.beginPath();
-      ctx.arc(sunX, sunY, 28*dpr, 0, Math.PI*2);
-      ctx.fill();
-      // Sun body
-      ctx.fillStyle = 'rgba(242,198,61,0.8)';
-      ctx.beginPath();
-      ctx.arc(sunX, sunY, 14*dpr, 0, Math.PI*2);
-      ctx.fill();
-      // Sun rays (rotating)
-      for (var rs = 0; rs < 8; rs++) {
-        var rAng = (rs / 8) * Math.PI * 2 + t * 0.3;
-        var r1 = 22*dpr, r2 = 32*dpr;
-        ctx.strokeStyle = 'rgba(242,198,61,0.4)';
-        ctx.lineWidth = 1*dpr;
-        ctx.beginPath();
-        ctx.moveTo(sunX + Math.cos(rAng) * r1, sunY + Math.sin(rAng) * r1);
-        ctx.lineTo(sunX + Math.cos(rAng) * r2, sunY + Math.sin(rAng) * r2);
-        ctx.stroke();
+      function leaf(sign,fillA,fillB,opt){
+        opt=opt||{};
+        var Lb=bW*0.40, t=doorOpen;
+        var hap=(opt.hap!==undefined?opt.hap:HAP), fold=(opt.fold!==undefined?opt.fold:0.96);
+        var P0=[aF, sign*bW];
+        var PAc=[aF, sign*bW*0.5];
+        var PAo=[aF+Lb*0.92, sign*bW + sign*hap];
+        var PA=[PAc[0]+(PAo[0]-PAc[0])*t, PAc[1]+(PAo[1]-PAc[1])*t];
+        var dirInb=PA[1]-P0[1], dirIna=PA[0]-P0[0];
+        var PBc=[aF, 0];
+        var segLen=Math.hypot(dirIna,dirInb), baseAng=Math.atan2(dirInb,dirIna);
+        var foldAng=baseAng + sign*fold*1.9;
+        var PBo=[PA[0]+Math.cos(foldAng)*segLen, PA[1]+Math.sin(foldAng)*segLen];
+        var PB=[PBc[0]+(PBo[0]-PBc[0])*t, PBc[1]+(PBo[1]-PBc[1])*t];
+        seg(P0,PA,fillA);
+        seg(PA,PB,fillB);
       }
+      ctx.fillStyle='#F2C63D';
+      [bfl,bfr,tfl,tfr].forEach(function(p){ ctx.fillRect(p.x-1.6*dpr,p.y-1.6*dpr,3.2*dpr,3.2*dpr); });
+      leaf(1, '#46505e', '#3a4450', {hap:0.45, fold:0.96});
+      leaf(-1,'#414b58', '#353f4a');
+    }
+    function drawTruck(liftPx, alpha){
+      if(alpha<=0.01) return; ctx.save(); ctx.globalAlpha=alpha;
+      var aF=-0.32, aB=aF-C_LEN, bW=C_W, trH=liftPx;
+      function up(p,h){ return {x:p.x,y:p.y-h}; }
+      var fa1=aF+0.06, fa0=aB-0.06, fb0=-bW-0.06, fb1=bW+0.06;
+      function wheel(bb,r){ var p=S.P(fa1,bb,0),cx=p.x,cy=p.y-r;
+        ctx.fillStyle='#0b0d11'; ctx.strokeStyle='rgba(242,198,61,0.7)'; ctx.lineWidth=1.4*dpr;
+        ellipse(cx,cy,r*0.72,r); ctx.fill(); ctx.stroke();
+        ctx.strokeStyle='rgba(242,198,61,0.5)'; ctx.lineWidth=1.0*dpr; ellipse(cx,cy,r*0.40,r*0.56); ctx.stroke();
+        ctx.fillStyle='#F2C63D'; ellipse(cx,cy,r*0.12,r*0.18); ctx.fill(); }
+      var R=8.5*dpr;
+      var FL=S.P(fa1,fb0,0),FR=S.P(fa1,fb1,0),BL=S.P(fa0,fb0,0),BR=S.P(fa0,fb1,0);
+      ctx.fillStyle='#1a1e25'; ctx.strokeStyle='rgba(242,198,61,0.5)'; ctx.lineWidth=0.9*dpr;
+      poly([up(FL,trH),up(FR,trH),up(BR,trH),up(BL,trH)]); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#0f1116';
+      poly([up(FL,trH),up(FR,trH),up(FR,trH*0.45),up(FL,trH*0.45)]); ctx.fill(); ctx.stroke();
+      [bW-0.2,bW-0.72,bW-1.24].forEach(function(bb){ wheel(bb,R); });
+      var gap=0.6, bCabBk=-bW-gap, bCabFr=bCabBk-0.78, bHoodFr=bCabFr-0.50;
+      var cabH=1.88*S.HT0, hoodH=0.92*S.HT0, deckH=0.36*S.HT0;   // W-based (via HT0) so the truck matches the container at any aspect
+      function CC(a,b,hpx){ var p=S.P(a,b,0); return {x:p.x,y:p.y-hpx}; }
+      function box(bFr,bBk,hBase,hTop,topC,leadC,sideC){
+        function P(a,b,h){ return CC(a,b,h); }
+        ctx.lineWidth=1.0*dpr; ctx.strokeStyle='#F2C63D';
+        ctx.fillStyle=topC;  poly([P(aF,bFr,hTop),P(aB,bFr,hTop),P(aB,bBk,hTop),P(aF,bBk,hTop)]); ctx.fill(); ctx.stroke();
+        ctx.fillStyle=sideC; poly([P(aF,bFr,hBase),P(aF,bBk,hBase),P(aF,bBk,hTop),P(aF,bFr,hTop)]); ctx.fill(); ctx.stroke();
+        ctx.fillStyle=leadC; poly([P(aF,bFr,hBase),P(aB,bFr,hBase),P(aB,bFr,hTop),P(aF,bFr,hTop)]); ctx.fill(); ctx.stroke();
+        return {lf:P(aF,bFr,hBase),lb:P(aB,bFr,hBase),tlf:P(aF,bFr,hTop),tlb:P(aB,bFr,hTop),
+                nf:P(aF,bFr,hBase),nb:P(aF,bBk,hBase),tnf:P(aF,bFr,hTop),tnb:P(aF,bBk,hTop)};
+      }
+      box(bHoodFr,bCabBk,0,deckH,'#15181e','#101318','#0f1217');
+      var cab=box(bCabFr,bCabBk,deckH,deckH+cabH,'#414b59','#333c48','#3a4350');
+      var hood=box(bHoodFr,bCabFr,deckH,deckH+hoodH,'#333c48','#283039','#2e3640');
+      var wsB=lerpP(cab.lf,cab.tlf,0.50), wsT=lerpP(cab.lf,cab.tlf,0.90);
+      var wsB2=lerpP(cab.lb,cab.tlb,0.50), wsT2=lerpP(cab.lb,cab.tlb,0.90);
+      ctx.fillStyle='rgba(180,210,248,0.30)'; poly([wsB,wsB2,wsT2,wsT]); ctx.fill();
+      ctx.strokeStyle='rgba(242,198,61,0.5)'; ctx.lineWidth=0.7*dpr; poly([wsB,wsB2,wsT2,wsT]); ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=0.5*dpr; line(lerpP(wsB,wsB2,0.5),lerpP(wsT,wsT2,0.5));
+      ctx.fillStyle='rgba(180,210,248,0.20)';
+      poly([lerpP(cab.nf,cab.tnf,0.50),lerpP(cab.nb,cab.tnb,0.50),lerpP(cab.nb,cab.tnb,0.86),lerpP(cab.nf,cab.tnf,0.86)]); ctx.fill();
+      ctx.fillStyle='#F2C63D';
+      [0.30,0.70].forEach(function(f){ var p=lerpP(lerpP(hood.lf,hood.lb,f),lerpP(hood.tlf,hood.tlb,f),0.30); ctx.beginPath(); ctx.arc(p.x,p.y,2.0*dpr,0,Math.PI*2); ctx.fill(); });
+      ctx.strokeStyle='rgba(242,198,61,0.4)'; ctx.lineWidth=0.5*dpr;
+      [0.55,0.72].forEach(function(f){ line(lerpP(hood.lf,hood.tlf,f),lerpP(hood.lb,hood.tlb,f)); });
+      var ex0=CC(aF, bCabBk+0.02, deckH), ex1=CC(aF, bCabBk+0.02, deckH+cabH+0.48*S.HT0);
+      ctx.lineCap='round';
+      ctx.strokeStyle='#727680'; ctx.lineWidth=2.6*dpr; line(ex0,ex1);
+      ctx.strokeStyle='rgba(255,255,255,0.22)'; ctx.lineWidth=0.8*dpr; line(ex0,ex1);
+      ctx.lineCap='butt';
+      var mArm=CC(aF, bCabFr, deckH+cabH*0.70), mGl=CC(aF, bCabFr-0.05, deckH+cabH*0.62);
+      ctx.strokeStyle='rgba(242,198,61,0.7)'; ctx.lineWidth=1.0*dpr; line(mArm, mGl);
+      ctx.fillStyle='#1a1e25'; ctx.strokeStyle='rgba(242,198,61,0.6)'; ctx.lineWidth=0.6*dpr;
+      ctx.fillRect(mGl.x-2*dpr, mGl.y-5*dpr, 3.6*dpr, 10*dpr); ctx.strokeRect(mGl.x-2*dpr, mGl.y-5*dpr, 3.6*dpr, 10*dpr);
+      wheel(bHoodFr+0.30,R*0.92); wheel(bCabBk-0.15,R*0.92);
+      ctx.restore();
+    }
+    function drawSupports(revealT){
+      var n=S.N+1, show=Math.ceil(n*clamp01(revealT));
+      ctx.strokeStyle='#F2C63D'; ctx.lineWidth=1.0*dpr;
+      for(var i=0;i<show;i++){ var a=i;
+        [-0.85*ARR_W,0.85*ARR_W].forEach(function(bb){ var top=S.P(a,bb,0);
+          ctx.beginPath(); ctx.moveTo(top.x,top.y); ctx.lineTo(top.x,top.y+12*dpr*S.rowScale(a)); ctx.stroke();
+          ctx.fillStyle='#F2C63D'; ctx.fillRect(top.x-3*dpr,top.y+12*dpr*S.rowScale(a)-1.5*dpr,6*dpr,3*dpr); }); }
+    }
+    function drawRails(revealT){
+      var maxA=S.N*clamp01(revealT);
+      ctx.strokeStyle='rgba(242,198,61,0.8)'; ctx.lineWidth=1.3*dpr;
+      [-0.85*ARR_W,0.85*ARR_W].forEach(function(bb){ line(S.P(0,bb,0), S.P(maxA,bb,0)); });
+    }
+    function drawTent(a, tF){
+      var hwk=0.12+0.88*tF, htk=FOLD_H+(OPEN_H-FOLD_H)*tF, depk=0.10+0.90*tF, d=S.DEP0*depk;
+      function PT(da,b,h){ return S.P(a+da,b*hwk*ARR_W,h*htk); }
+      var bfl=PT(-d,-1,0),bfr=PT(-d,1,0),ffl=PT(d,-1,0),ffr=PT(d,1,0),rl=PT(0,-1,1),rr=PT(0,1,1);
+      ctx.fillStyle='#16273f'; ctx.strokeStyle='rgba(242,198,61,0.5)'; ctx.lineWidth=0.7*dpr; poly([bfl,bfr,rr,rl]); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#274a78'; ctx.strokeStyle='rgba(242,198,61,0.85)'; poly([ffl,ffr,rr,rl]); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#1d3050'; ctx.strokeStyle='rgba(242,198,61,0.7)'; poly([ffr,bfr,rr]); ctx.fill(); ctx.stroke();
+      if(tF>0.45){ ctx.strokeStyle='rgba(170,200,240,'+(0.30*tF)+')'; ctx.lineWidth=0.4*dpr;
+        for(var g=1;g<=3;g++){ var bb=-1+g*0.5; line(PT(d,bb,0), PT(0,bb,1)); } }
+    }
+    function drawModules(deployed){
+      var N=S.N,emerge=deployed*N,full=Math.min(N,Math.floor(emerge)),sub=emerge-full,tents=[];
+      for(var i=0;i<full;i++) tents.push({a:(full-1-i)+sub,t:1});
+      if(full<N) tents.push({a:sub-1,t:sub});
+      tents.sort(function(p,q){ return p.a-q.a; });
+      tents.forEach(function(tt){ if(tt.a>-0.55) drawTent(tt.a,tt.t); });
+    }
+    function drawEnergyGlow(deployed){
+      var alpha = deployed>0.9 ? (deployed-0.9)/0.1 : 0; if(alpha<=0.01) return;
+      var mid=S.P(S.N*0.5*deployed,0,0.4);
+      ctx.save(); ctx.globalAlpha=alpha; var r=H*0.32;
+      var g=ctx.createRadialGradient(mid.x,mid.y,0,mid.x,mid.y,r);
+      g.addColorStop(0,'rgba(242,198,61,0.22)'); g.addColorStop(1,'rgba(242,198,61,0)');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(mid.x,mid.y,r,0,Math.PI*2); ctx.fill();
+      ctx.restore();
     }
 
     function drawLabelAndBrackets(s) {
@@ -5884,78 +5737,35 @@
       });
     }
 
-    // Continuous-step rendering: fractional step builds up the scene progressively.
-    // 0 → 1 : Truck drives in, container fades in toward end
-    // 1 → 2 : Supports appear one by one
-    // 2 → 3 : Rails laid over supports
-    // 3 → 4 : PV array unfolds (conveyor)
-    // 4     : Power live (glow)
-    function drawSceneContent(stepCont) {
-      var cx = W * 0.18;
-      var cy = H * 0.55;
-      var cW = 64 * dpr;
-      var cH = 86 * dpr;
-      var truckCy = H * 0.55;
-
-      if (stepCont < 1) {
-        // Truck visible — fades out as we approach container scene
-        var truckAlpha = Math.min(1, 1 - Math.max(0, stepCont - 0.55) / 0.45);
-        if (truckAlpha > 0.01) {
-          ctx.save();
-          ctx.globalAlpha = truckAlpha;
-          var cycleT = prefersReducedMotion ? 0.85 : (Date.now() / 5500) % 1;
-          var truckCx;
-          if (cycleT < 0.7) {
-            var drivePhase = cycleT / 0.7;
-            var eased = 1 - Math.pow(1 - drivePhase, 3);
-            truckCx = -W * 0.30 + (W * 0.50) * eased;
-          } else {
-            truckCx = W * 0.20;
-          }
-          drawTruck(truckCx, truckCy, 170 * dpr, 72 * dpr);
-          ctx.restore();
-        }
-
-        // Container/foundations fade in during second half of step 0→1
-        var containerAlpha = Math.max(0, Math.min(1, (stepCont - 0.55) / 0.45));
-        if (containerAlpha > 0.01) {
-          ctx.save();
-          ctx.globalAlpha = containerAlpha;
-          drawStripFoundationsShort(cx, cy, cW, cH);
-          drawContainerDoorSide(cx, cy, cW, cH);
-          ctx.restore();
-        }
-        return;
+    // 3D scene — homepage's 5 phases (0..4) mapped onto the 3D timeline (0..5):
+    //   0→1 transport + crane set-down, 1→2 supports, 2→3 rails, 3→4 modules, 4 operation.
+    function drawSceneContent(step) {
+      var stepCont = (step <= 1) ? step * 2 : step + 1;
+      var transportT=clamp01(stepCont), abladenT=clamp01(stepCont-1), supportT=clamp01(stepCont-2),
+          railT=clamp01(stepCont-3), moduleT=clamp01(stepCont-4);
+      if(stepCont>1.0) drawFoundations(abladenT);
+      var PLAT=0.24*S.HT0, LIFTH=0.44*S.HT0;   // container rest/bed height as HT0 multiples (W-based, consistent)
+      var craneT=clamp01(abladenT/0.7);
+      var liftPx=PLAT + (LIFTH - PLAT)*(1-craneT);
+      var legGrow=clamp01((abladenT-0.2)/0.5);
+      var ENTER=3.6, EXIT=7.0;
+      var contOffB=(1-transportT)*ENTER;
+      var truckOffB = transportT<1 ? (1-transportT)*ENTER : (-clamp01((abladenT-0.15)/0.6)*EXIT);
+      function ewT(o){ return {x:S.EWu.x*S.halfW*o, y:S.EWu.y*S.halfW*o}; }
+      var ctp=ewT(contOffB), ttp=ewT(truckOffB);
+      var truckAlpha = transportT<1 ? 1 : clamp01(1-(abladenT-0.55)/0.3);
+      if(truckAlpha>0.01){ ctx.save(); ctx.translate(ttp.x, ttp.y); drawTruck(LIFTH, truckAlpha); ctx.restore(); }
+      var doorOpen=Math.max(0,Math.min(1,(stepCont-1.65)/0.5));
+      if(transportT>=1 && legGrow>0.01){ ctx.save(); ctx.translate(ctp.x, ctp.y); drawContainerLegs(liftPx, legGrow); ctx.restore(); }
+      ctx.save(); ctx.translate(ctp.x, ctp.y); drawContainer(0, liftPx, doorOpen); ctx.restore();
+      if(transportT>=1){
+        var hookAlpha=Math.min(clamp01(abladenT/0.08), (abladenT<0.78?1:clamp01(1-(abladenT-0.78)/0.18)));
+        if(hookAlpha>0.01){ var midA=-0.32-C_LEN/2; var tc=S.P(midA,0,C_H); drawCraneHook({x:tc.x+ctp.x, y:tc.y+ctp.y-liftPx}, hookAlpha); }
       }
-
-      // Step ≥ 1 : container + foundations always present
-      drawStripFoundationsShort(cx, cy, cW, cH);
-      drawContainerDoorSide(cx, cy, cW, cH);
-
-      // Step 1 → 2 : supports appear sequentially
-      var supT = Math.max(0, Math.min(1, stepCont - 1));
-      if (supT > 0) drawSupportsOnly(cx, cy, cW, cH, supT);
-
-      // Step 2 → 3 : rails laid over supports
-      var railT = Math.max(0, Math.min(1, stepCont - 2));
-      if (railT > 0) drawRails(cx, cy, cW, cH, railT);
-
-      // Step 3 → 4 : PV array unfolds
-      var unfoldT = Math.max(0, Math.min(1, stepCont - 3));
-      if (unfoldT > 0) drawPVArrayRight(cx, cy, cW, cH, unfoldT);
-
-      // Energy glow fades in at the very end (last 20% of step 3→4)
-      if (stepCont > 3.8) {
-        var glowAlpha = Math.min(1, (stepCont - 3.8) / 0.2);
-        var arrayStartX = cx + cW/2 + 14*dpr;
-        var arrayEndX = W * 0.94;
-        var glowCx = (arrayStartX + arrayEndX) / 2;
-        var glowCy = cy + cH/2 - 18*dpr;
-        ctx.save();
-        ctx.globalAlpha = glowAlpha;
-        drawEnergyGlow(glowCx, glowCy);
-        ctx.restore();
-      }
+      if(supportT>0) drawSupports(supportT);
+      if(railT>0) drawRails(railT);
+      if(moduleT>0) drawModules(moduleT);
+      drawEnergyGlow(moduleT);
     }
 
     // Direct scroll-scrub animation loop (no lerp — step follows targetStep 1:1)
@@ -5979,7 +5789,7 @@
       // oversized next to tiny modules. Drawing into a constant 1100px-wide space
       // and scaling to fit keeps every element's proportion to the others exactly
       // as on desktop. Positions stay proportional; only the fixed sizes scale.
-      var sc = mobileMQ.matches ? (canvas.offsetWidth / 1100) : 1;
+      var sc = 1;
       var rW = W, rH = H;
       ctx.save();
       if (sc !== 1) { ctx.scale(sc, sc); W = rW / sc; H = rH / sc; }
