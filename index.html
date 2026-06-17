@@ -7930,8 +7930,11 @@ document.addEventListener('click', function (e) {
     }, { passive: true });
   }
 
-  /* HubSpot tracking — injected ONLY after consent, same opt-in as GA. */
-  function loadHubSpot() {
+  /* HubSpot tracking. The loader is injected on every page view so HubSpot's
+     "tracking code installed" validation passes, but cookies + tracking are
+     suppressed via the doNotTrack privacy API until the visitor opts in. */
+  var _hsq = window._hsq = window._hsq || [];
+  function injectHubSpot() {
     if (window.__hsLoaded) return;
     window.__hsLoaded = true;
     var s = document.createElement('script');
@@ -7942,8 +7945,10 @@ document.addEventListener('click', function (e) {
     s.src = '//js-eu1.hs-scripts.com/148629803.js';
     document.head.appendChild(s);
   }
-
-  function loadAnalytics() { loadGA(); loadHubSpot(); }
+  function enableHubSpotTracking() {
+    _hsq.push(['doNotTrack', { track: true }]);
+    _hsq.push(['trackPageView']);
+  }
 
   function hide() { banner.classList.remove('show'); }
   function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
@@ -7952,8 +7957,14 @@ document.addEventListener('click', function (e) {
   try { choice = localStorage.getItem(KEY); } catch (e) {}
 
   if (choice === 'granted') {
-    loadAnalytics();
-  } else if (choice !== 'denied') {
+    loadGA();
+    injectHubSpot();            // consent already given -> track normally
+  } else {
+    _hsq.push(['doNotTrack']);  // suppress cookies / tracking until opt-in
+    injectHubSpot();            // still load the script so HubSpot validates
+  }
+
+  if (choice !== 'granted' && choice !== 'denied') {
     // Reveal the banner once the intro overlay is gone.
     var intro = document.getElementById('intro');
     var shown = false;
@@ -7969,7 +7980,7 @@ document.addEventListener('click', function (e) {
   }
 
   document.getElementById('consent-accept').addEventListener('click', function () {
-    store('granted'); hide(); loadAnalytics();
+    store('granted'); hide(); loadGA(); enableHubSpotTracking();
   });
   document.getElementById('consent-decline').addEventListener('click', function () {
     store('denied'); hide();

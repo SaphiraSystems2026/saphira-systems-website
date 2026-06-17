@@ -341,10 +341,15 @@
   <div>&copy; 2026 Patrick Pfeiffer &middot; Saphira Systems &middot; Power. Deployed. Anywhere.</div>
 </footer>
 
-<!-- HubSpot tracking — loads ONLY if analytics consent was granted on the main page. -->
+<!-- HubSpot tracking — loader runs on every page view (so HubSpot validates),
+     but cookies/tracking stay suppressed via doNotTrack until consent was
+     granted on the main page. -->
 <script>
 (function () {
-  try { if (localStorage.getItem('saphira-analytics-consent') !== 'granted') return; } catch (e) { return; }
+  var _hsq = window._hsq = window._hsq || [];
+  var ok = false;
+  try { ok = localStorage.getItem('saphira-analytics-consent') === 'granted'; } catch (e) {}
+  if (!ok) _hsq.push(['doNotTrack']);
   var s = document.createElement('script');
   s.type = 'text/javascript'; s.id = 'hs-script-loader';
   s.async = true; s.defer = true;
