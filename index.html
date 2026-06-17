@@ -7883,7 +7883,7 @@ document.addEventListener('click', function (e) {
 <!-- Cookie / analytics consent — GDPR opt-in: Google Analytics loads ONLY after Accept -->
 <div id="consent-banner" class="consent-banner" role="dialog" aria-label="Privacy consent">
   <div class="consent-text">
-    We use cookies only for anonymous usage statistics (Google Analytics) to improve this site.
+    We use cookies for usage statistics (Google Analytics) and lead analytics (HubSpot) to improve this site.
     Nothing is loaded or tracked without your consent. See our
     <a href="saphira-systems_privacy.html">Privacy Policy</a>.
   </div>
@@ -7930,6 +7930,21 @@ document.addEventListener('click', function (e) {
     }, { passive: true });
   }
 
+  /* HubSpot tracking — injected ONLY after consent, same opt-in as GA. */
+  function loadHubSpot() {
+    if (window.__hsLoaded) return;
+    window.__hsLoaded = true;
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.id = 'hs-script-loader';
+    s.async = true;
+    s.defer = true;
+    s.src = '//js-eu1.hs-scripts.com/148629803.js';
+    document.head.appendChild(s);
+  }
+
+  function loadAnalytics() { loadGA(); loadHubSpot(); }
+
   function hide() { banner.classList.remove('show'); }
   function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
 
@@ -7937,7 +7952,7 @@ document.addEventListener('click', function (e) {
   try { choice = localStorage.getItem(KEY); } catch (e) {}
 
   if (choice === 'granted') {
-    loadGA();
+    loadAnalytics();
   } else if (choice !== 'denied') {
     // Reveal the banner once the intro overlay is gone.
     var intro = document.getElementById('intro');
@@ -7954,7 +7969,7 @@ document.addEventListener('click', function (e) {
   }
 
   document.getElementById('consent-accept').addEventListener('click', function () {
-    store('granted'); hide(); loadGA();
+    store('granted'); hide(); loadAnalytics();
   });
   document.getElementById('consent-decline').addEventListener('click', function () {
     store('denied'); hide();
