@@ -7930,21 +7930,11 @@ document.addEventListener('click', function (e) {
     }, { passive: true });
   }
 
-  /* HubSpot tracking. The loader is injected on every page view so HubSpot's
-     "tracking code installed" validation passes, but cookies + tracking are
-     suppressed via the doNotTrack privacy API until the visitor opts in. */
+  /* HubSpot tracking. The actual loader is a STATIC <script> tag at the end of
+     <body> so HubSpot's automated tracking-code validation (which does NOT run
+     JavaScript) can detect it. Here we only toggle the doNotTrack privacy flag
+     so no HubSpot cookies are set and no tracking happens before opt-in. */
   var _hsq = window._hsq = window._hsq || [];
-  function injectHubSpot() {
-    if (window.__hsLoaded) return;
-    window.__hsLoaded = true;
-    var s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.id = 'hs-script-loader';
-    s.async = true;
-    s.defer = true;
-    s.src = '//js-eu1.hs-scripts.com/148629803.js';
-    document.head.appendChild(s);
-  }
   function enableHubSpotTracking() {
     _hsq.push(['doNotTrack', { track: true }]);
     _hsq.push(['trackPageView']);
@@ -7957,11 +7947,9 @@ document.addEventListener('click', function (e) {
   try { choice = localStorage.getItem(KEY); } catch (e) {}
 
   if (choice === 'granted') {
-    loadGA();
-    injectHubSpot();            // consent already given -> track normally
+    loadGA();                   // consent already given -> HubSpot tracks normally
   } else {
-    _hsq.push(['doNotTrack']);  // suppress cookies / tracking until opt-in
-    injectHubSpot();            // still load the script so HubSpot validates
+    _hsq.push(['doNotTrack']);  // suppress HubSpot cookies / tracking until opt-in
   }
 
   if (choice !== 'granted' && choice !== 'denied') {
@@ -8157,5 +8145,8 @@ document.addEventListener('click', function (e) {
   window.__drawMapDots = draw; // for verification
 })();
 </script>
+<!-- Start of HubSpot Embed Code (tracking suppressed via doNotTrack until consent) -->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js-eu1.hs-scripts.com/148629803.js"></script>
+<!-- End of HubSpot Embed Code -->
 </body>
 </html>

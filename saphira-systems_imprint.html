@@ -341,21 +341,16 @@
   <div>&copy; 2026 Patrick Pfeiffer &middot; Saphira Systems &middot; Power. Deployed. Anywhere.</div>
 </footer>
 
-<!-- HubSpot tracking — loader runs on every page view (so HubSpot validates),
-     but cookies/tracking stay suppressed via doNotTrack until consent was
-     granted on the main page. -->
+<!-- Suppress HubSpot cookies/tracking until consent was granted on the main page.
+     Runs before the static loader below, which HubSpot's validator detects. -->
 <script>
-(function () {
-  var _hsq = window._hsq = window._hsq || [];
-  var ok = false;
-  try { ok = localStorage.getItem('saphira-analytics-consent') === 'granted'; } catch (e) {}
-  if (!ok) _hsq.push(['doNotTrack']);
-  var s = document.createElement('script');
-  s.type = 'text/javascript'; s.id = 'hs-script-loader';
-  s.async = true; s.defer = true;
-  s.src = '//js-eu1.hs-scripts.com/148629803.js';
-  document.head.appendChild(s);
-})();
+  window._hsq = window._hsq || [];
+  try {
+    if (localStorage.getItem('saphira-analytics-consent') !== 'granted') window._hsq.push(['doNotTrack']);
+  } catch (e) { window._hsq.push(['doNotTrack']); }
 </script>
+<!-- Start of HubSpot Embed Code -->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js-eu1.hs-scripts.com/148629803.js"></script>
+<!-- End of HubSpot Embed Code -->
 </body>
 </html>
