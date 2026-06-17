@@ -7883,8 +7883,8 @@ document.addEventListener('click', function (e) {
 <!-- Cookie / analytics consent — GDPR opt-in: Google Analytics loads ONLY after Accept -->
 <div id="consent-banner" class="consent-banner" role="dialog" aria-label="Privacy consent">
   <div class="consent-text">
-    We use cookies for usage statistics (Google Analytics) and lead analytics (HubSpot) to improve this site.
-    Nothing is loaded or tracked without your consent. See our
+    We use Google Analytics for anonymous usage statistics — loaded only if you accept.
+    We also use HubSpot to analyse site usage for our B2B sales process. See our
     <a href="saphira-systems_privacy.html">Privacy Policy</a>.
   </div>
   <div class="consent-actions">
@@ -7930,16 +7930,9 @@ document.addEventListener('click', function (e) {
     }, { passive: true });
   }
 
-  /* HubSpot tracking. The actual loader is a STATIC <script> tag at the end of
-     <body> so HubSpot's automated tracking-code validation (which does NOT run
-     JavaScript) can detect it. Here we only toggle the doNotTrack privacy flag
-     so no HubSpot cookies are set and no tracking happens before opt-in. */
-  var _hsq = window._hsq = window._hsq || [];
-  function enableHubSpotTracking() {
-    _hsq.push(['doNotTrack', { track: true }]);
-    _hsq.push(['trackPageView']);
-  }
-
+  /* HubSpot tracking runs unconditionally via the static loader tag at the end
+     of <body> (HubSpot's automated validation requires the tracker to fire on
+     load). Only Google Analytics below is gated behind the consent banner. */
   function hide() { banner.classList.remove('show'); }
   function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
 
@@ -7947,9 +7940,7 @@ document.addEventListener('click', function (e) {
   try { choice = localStorage.getItem(KEY); } catch (e) {}
 
   if (choice === 'granted') {
-    loadGA();                   // consent already given -> HubSpot tracks normally
-  } else {
-    _hsq.push(['doNotTrack']);  // suppress HubSpot cookies / tracking until opt-in
+    loadGA();
   }
 
   if (choice !== 'granted' && choice !== 'denied') {
@@ -7968,7 +7959,7 @@ document.addEventListener('click', function (e) {
   }
 
   document.getElementById('consent-accept').addEventListener('click', function () {
-    store('granted'); hide(); loadGA(); enableHubSpotTracking();
+    store('granted'); hide(); loadGA();
   });
   document.getElementById('consent-decline').addEventListener('click', function () {
     store('denied'); hide();
@@ -8145,7 +8136,7 @@ document.addEventListener('click', function (e) {
   window.__drawMapDots = draw; // for verification
 })();
 </script>
-<!-- Start of HubSpot Embed Code (tracking suppressed via doNotTrack until consent) -->
+<!-- Start of HubSpot Embed Code -->
 <script type="text/javascript" id="hs-script-loader" async defer src="//js-eu1.hs-scripts.com/148629803.js"></script>
 <!-- End of HubSpot Embed Code -->
 </body>

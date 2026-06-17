@@ -323,7 +323,7 @@
     </ul>
     <p>These logs are kept for a maximum of <strong>30 days</strong> to ensure operational stability and protect against abuse.</p>
 
-    <p><strong>Cookies / tracking.</strong> Strictly-necessary technical cookies (e.g. remembering your language preference if you set one) are always active. In addition, <strong>only with your explicit consent</strong> via our opt-in cookie banner, we use <strong>Google Analytics 4</strong> (with IP anonymisation) and the <strong>HubSpot</strong> tracking code to understand how the site is used and to qualify B2B leads. These analytics cookies are loaded <strong>only after you click &ldquo;Accept&rdquo;</strong> and never beforehand. You can decline, or withdraw a previously given consent at any time (effective for the future) by clearing the choice stored in your browser. We do <strong>not</strong> use advertising or social-tracking cookies. Embedded third-party links (LinkedIn, WhatsApp) only load when you click them.</p>
+    <p><strong>Cookies / tracking.</strong> Strictly-necessary technical cookies (e.g. remembering your language preference if you set one) are always active. We use the <strong>HubSpot</strong> tracking code to understand how our site is used and to qualify B2B leads; it is active when you visit the site, on the legal basis of our legitimate interest in operating and improving a B2B sales website (Art. 6 (1) (f) GDPR, see section 03). You can object to this processing at any time (see section 06). In addition, <strong>only with your explicit consent</strong> via our opt-in cookie banner, we use <strong>Google Analytics 4</strong> with IP anonymisation; it loads <strong>only after you click &ldquo;Accept&rdquo;</strong> and you can withdraw that consent at any time. We do <strong>not</strong> use advertising or social-tracking cookies. Embedded third-party links (LinkedIn, WhatsApp) only load when you click them.</p>
   </section>
 
   <!-- 3 -->
@@ -430,14 +430,6 @@
   <div>© 2026 Patrick Pfeiffer · Saphira Systems · Power. Deployed. Anywhere.</div>
 </footer>
 
-<!-- Suppress HubSpot cookies/tracking until consent was granted on the main page.
-     Runs before the static loader below, which HubSpot's validator detects. -->
-<script>
-  window._hsq = window._hsq || [];
-  try {
-    if (localStorage.getItem('saphira-analytics-consent') !== 'granted') window._hsq.push(['doNotTrack']);
-  } catch (e) { window._hsq.push(['doNotTrack']); }
-</script>
 <!-- Start of HubSpot Embed Code -->
 <script type="text/javascript" id="hs-script-loader" async defer src="//js-eu1.hs-scripts.com/148629803.js"></script>
 <!-- End of HubSpot Embed Code -->
