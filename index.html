@@ -4933,28 +4933,24 @@
 
         <!-- Honeypot (hidden from real users, bots fill it) -->
         <div class="hp-field" aria-hidden="true">
-          <label for="cf-company-website">Website (leave empty)</label>
-          <input type="text" id="cf-company-website" name="company_website" tabindex="-1" autocomplete="off">
+          <label for="cf-hp">Website (leave empty)</label>
+          <input type="text" id="cf-hp" name="_hp" tabindex="-1" autocomplete="off">
         </div>
-
-        <!-- Hidden lead category (populated by JS from interest type) -->
-        <input type="hidden" name="lead_category" id="cf-lead-category" value="">
-        <input type="hidden" name="meeting_type" id="cf-meeting-type" value="">
 
         <div class="form-row">
           <div class="form-field">
-            <label for="cf-name" data-i18n="contact.form.name">Name <span class="req">*</span></label>
+            <label for="cf-name" data-i18n="contact.form.name" data-i18n-html>Name <span class="req">*</span></label>
             <input type="text" id="cf-name" name="name" required autocomplete="name">
           </div>
           <div class="form-field">
-            <label for="cf-company" data-i18n="contact.form.company">Company <span class="req">*</span></label>
+            <label for="cf-company" data-i18n="contact.form.company" data-i18n-html>Company <span class="req">*</span></label>
             <input type="text" id="cf-company" name="company" required autocomplete="organization">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label for="cf-email" data-i18n="contact.form.email">Email <span class="req">*</span></label>
+            <label for="cf-email" data-i18n="contact.form.email" data-i18n-html>Email <span class="req">*</span></label>
             <input type="email" id="cf-email" name="email" required autocomplete="email">
           </div>
           <div class="form-field">
@@ -4965,65 +4961,75 @@
 
         <div class="form-row">
           <div class="form-field">
-            <label for="cf-country" data-i18n="contact.form.country">Country <span class="req">*</span></label>
-            <input type="text" id="cf-country" name="country" required autocomplete="country-name" placeholder="e.g. Chile, India, Austria">
+            <label for="cf-region" data-i18n="contact.form.region">Region / Market</label>
+            <select id="cf-region" name="region_market">
+              <option value="" data-i18n="contact.form.interest.placeholder">Select…</option>
+              <option value="LATAM">LATAM</option>
+              <option value="North America">North America</option>
+              <option value="Europe">Europe</option>
+              <option value="MENA">MENA</option>
+              <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
+              <option value="APAC">APAC</option>
+              <option value="Caribbean">Caribbean</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
           <div class="form-field">
-            <label for="cf-interest" data-i18n="contact.form.interest">Interest <span class="req">*</span></label>
-            <select id="cf-interest" name="interest" required>
-              <option value="" disabled selected data-i18n="contact.form.interest.placeholder">Select…</option>
-              <option value="distributor" data-i18n="contact.form.interest.distributor">Distributor Partnership</option>
-              <option value="project" data-i18n="contact.form.interest.project">Project Inquiry</option>
-              <option value="government" data-i18n="contact.form.interest.government">Government / Defense</option>
-              <option value="epc" data-i18n="contact.form.interest.epc">EPC Cooperation</option>
-              <option value="technical" data-i18n="contact.form.interest.technical">Technical Information</option>
-              <option value="media" data-i18n="contact.form.interest.media">Media / Press</option>
-              <option value="other" data-i18n="contact.form.interest.other">Other</option>
+            <label for="cf-interest" data-i18n="contact.form.interest">Inquiry type</label>
+            <select id="cf-interest" name="interest">
+              <option value="" data-i18n="contact.form.interest.placeholder">Select…</option>
+              <option value="Distributor Partnership">Distributor Partnership</option>
+              <option value="End Customer">End Customer</option>
+              <option value="Service Partner">Service Partner</option>
+              <option value="Investor">Investor</option>
+              <option value="Financial Institution">Financial Institution</option>
+              <option value="Government">Government</option>
+              <option value="Press / Other">Press / Other</option>
             </select>
           </div>
         </div>
 
-        <!-- Conditional / optional context fields (revealed when interest is project/EPC/government/distributor) -->
-        <div class="form-optional" id="cf-optional" hidden>
-          <div class="form-row">
-            <div class="form-field">
-              <label for="cf-region" data-i18n="contact.form.region">Region / Market</label>
-              <input type="text" id="cf-region" name="region" placeholder="e.g. LATAM, MENA, APAC">
-            </div>
-            <div class="form-field">
-              <label for="cf-size" data-i18n="contact.form.size">Estimated project size</label>
-              <select id="cf-size" name="project_size">
-                <option value="">—</option>
-                <option value="1">1 unit (134 kWp)</option>
-                <option value="2-5">2–5 units</option>
-                <option value="6-20">6–20 units</option>
-                <option value="20+">20+ units / fleet</option>
-              </select>
-            </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="cf-country" data-i18n="contact.form.country">Country</label>
+            <select id="cf-country" name="country" autocomplete="country-name">
+              <option value="" data-i18n="contact.form.interest.placeholder">Select…</option>
+            </select>
           </div>
-          <div class="form-row">
-            <div class="form-field">
-              <label for="cf-application" data-i18n="contact.form.application">Application area</label>
-              <select id="cf-application" name="application">
-                <option value="">—</option>
-                <option value="mining">Mining / remote industry</option>
-                <option value="defense">Defense / mission-critical</option>
-                <option value="construction">Construction / infrastructure</option>
-                <option value="telecom">Telecom / off-grid</option>
-                <option value="humanitarian">Humanitarian / disaster relief</option>
-                <option value="agriculture">Agriculture / agro-industrial</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label for="cf-prefcontact" data-i18n="contact.form.prefcontact">Preferred contact</label>
-              <select id="cf-prefcontact" name="preferred_contact">
-                <option value="email">Email</option>
-                <option value="phone">Phone</option>
-                <option value="whatsapp">WhatsApp</option>
-                <option value="teams">Teams Meeting</option>
-              </select>
-            </div>
+          <div class="form-field">
+            <label for="cf-size" data-i18n="contact.form.size">Estimated project size</label>
+            <select id="cf-size" name="estimated_project_size">
+              <option value="" data-i18n="contact.form.interest.placeholder">Select…</option>
+              <option value="1 unit">1 unit</option>
+              <option value="2–5 units">2–5 units</option>
+              <option value="6–20 units">6–20 units</option>
+              <option value="20+ units">20+ units</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="cf-application" data-i18n="contact.form.application">Application area</label>
+            <select id="cf-application" name="application_area">
+              <option value="" data-i18n="contact.form.interest.placeholder">Select…</option>
+              <option value="Mining">Mining</option>
+              <option value="Disaster Relief">Disaster Relief</option>
+              <option value="Defense">Defense</option>
+              <option value="Agriculture">Agriculture</option>
+              <option value="Data Center">Data Center</option>
+              <option value="Construction">Construction</option>
+              <option value="Off-grid / Remote">Off-grid / Remote</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="cf-prefcontact" data-i18n="contact.form.prefcontact">Preferred contact</label>
+            <select id="cf-prefcontact" name="preferred_contact">
+              <option value="Email">Email</option>
+              <option value="Phone">Phone</option>
+              <option value="WhatsApp">WhatsApp</option>
+            </select>
           </div>
         </div>
 
@@ -6425,93 +6431,75 @@
     var successBlock = document.getElementById('contact-success');
     var errorBox = document.getElementById('cf-error');
     var interestSelect = document.getElementById('cf-interest');
-    var optionalBlock = document.getElementById('cf-optional');
-    var leadField = document.getElementById('cf-lead-category');
-    var meetingField = document.getElementById('cf-meeting-type');
-    var meetingButtons = document.querySelectorAll('.meeting-type');
-    var bookingCta = document.getElementById('open-booking');
-    var successBookBtn = document.getElementById('success-book');
+    var regionSelect = document.getElementById('cf-region');
+    var countrySelect = document.getElementById('cf-country');
 
-    // Map Interest → CRM lead category
-    var INTEREST_TO_LEAD = {
-      distributor: 'Partnership',
-      project: 'Project Inquiry',
-      government: 'Government / Defense',
-      epc: 'EPC',
-      technical: 'Technical Request',
-      media: 'Media / Press',
-      other: 'Other'
+    // ── HubSpot Forms API configuration (fill in before going live) ──
+    const PORTAL_ID = "148629803";
+    const FORM_GUID = "751c2d24-e1f3-476b-9c98-07ea7e6dc104";
+    // HTML input name → HubSpot internal property name
+    const FIELD_MAP = {
+      company: "company", email: "email", phone: "phone",
+      region_market: "region_market", country: "country", interest: "interest",
+      estimated_project_size: "estimated_project_size",
+      application_area: "application_area", preferred_contact: "preferred_contact",
+      message: "message"
     };
-    // Interests that reveal the optional context fields
-    var OPTIONAL_INTERESTS = { project: 1, government: 1, epc: 1, distributor: 1 };
 
-    function syncOptional() {
-      var v = interestSelect.value;
-      if (leadField) leadField.value = INTEREST_TO_LEAD[v] || '';
-      if (optionalBlock) {
-        if (OPTIONAL_INTERESTS[v]) {
-          optionalBlock.hidden = false;
-        } else {
-          optionalBlock.hidden = true;
-        }
-      }
-    }
-    interestSelect.addEventListener('change', syncOptional);
-    syncOptional();
+    // ── 3) Region → countries (cascade) ──
+    var REGIONS = {
+      "LATAM": ["Argentina","Belize","Bolivia","Brazil","Chile","Colombia","Costa Rica","Ecuador","El Salvador","Guatemala","Guyana","Honduras","Mexico","Nicaragua","Panama","Paraguay","Peru","Suriname","Uruguay","Venezuela"],
+      "North America": ["Canada","United States"],
+      "Europe": ["Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kosovo","Latvia","Liechtenstein","Lithuania","Luxembourg","Malta","Moldova","Monaco","Montenegro","Netherlands","North Macedonia","Norway","Poland","Portugal","Romania","Russia","San Marino","Serbia","Slovakia","Slovenia","Spain","Sweden","Switzerland","Turkey","Ukraine","United Kingdom","Vatican City"],
+      "MENA": ["Algeria","Bahrain","Egypt","Iran","Iraq","Israel","Jordan","Kuwait","Lebanon","Libya","Morocco","Oman","Palestine","Qatar","Saudi Arabia","Syria","Tunisia","United Arab Emirates","Yemen"],
+      "Sub-Saharan Africa": ["Angola","Benin","Botswana","Burkina Faso","Burundi","Cabo Verde","Cameroon","Central African Republic","Chad","Comoros","Democratic Republic of the Congo","Republic of the Congo","Côte d'Ivoire","Djibouti","Equatorial Guinea","Eritrea","Eswatini","Ethiopia","Gabon","Gambia","Ghana","Guinea","Guinea-Bissau","Kenya","Lesotho","Liberia","Madagascar","Malawi","Mali","Mauritania","Mauritius","Mozambique","Namibia","Niger","Nigeria","Rwanda","São Tomé and Príncipe","Senegal","Seychelles","Sierra Leone","Somalia","South Africa","South Sudan","Sudan","Tanzania","Togo","Uganda","Zambia","Zimbabwe"],
+      "APAC": ["Afghanistan","Australia","Bangladesh","Bhutan","Brunei","Cambodia","China","Fiji","India","Indonesia","Japan","Kazakhstan","Kiribati","Kyrgyzstan","Laos","Malaysia","Maldives","Marshall Islands","Micronesia","Mongolia","Myanmar","Nauru","Nepal","New Zealand","North Korea","Pakistan","Palau","Papua New Guinea","Philippines","Samoa","Singapore","Solomon Islands","South Korea","Sri Lanka","Taiwan","Tajikistan","Thailand","Timor-Leste","Tonga","Turkmenistan","Tuvalu","Uzbekistan","Vanuatu","Vietnam"],
+      "Caribbean": ["Antigua and Barbuda","Bahamas","Barbados","Cuba","Dominica","Dominican Republic","Grenada","Haiti","Jamaica","Saint Kitts and Nevis","Saint Lucia","Trinidad and Tobago"]
+    };
 
-    // Meeting-type radio group
-    meetingButtons.forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        meetingButtons.forEach(function(b) { b.setAttribute('aria-checked', 'false'); });
-        btn.setAttribute('aria-checked', 'true');
-        var key = btn.dataset.meeting;
-        if (meetingField) meetingField.value = key;
-        // Sync Interest dropdown if a matching value exists
-        var INTEREST_FROM_MEETING = {
-          partnership: 'distributor',
-          project: 'project',
-          technical: 'technical',
-          government: 'government',
-          epc: 'epc',
-          distributor: 'distributor'
-        };
-        var mapped = INTEREST_FROM_MEETING[key];
-        if (mapped && interestSelect) {
-          interestSelect.value = mapped;
-          syncOptional();
-        }
+    // Flat, de-duplicated, alphabetically sorted list of every country.
+    var ALL_COUNTRIES = (function () {
+      var seen = {}, all = [];
+      Object.keys(REGIONS).forEach(function (r) {
+        REGIONS[r].forEach(function (c) { if (!seen[c]) { seen[c] = 1; all.push(c); } });
       });
-    });
+      return all.sort();
+    })();
 
-    // Booking CTA — opens Calendly/MS Bookings URL if configured, otherwise scrolls to form
-    function openBooking(e) {
-      if (e) e.preventDefault();
-      var bookingUrl = bookingCta ? bookingCta.dataset.bookingUrl : '';
-      if (bookingUrl) {
-        window.open(bookingUrl, '_blank', 'noopener');
+    // Rebuild the Country dropdown from the selected region. Without a region,
+    // or with region = "Other", show every country. Otherwise show only the
+    // region's countries plus "Other". Existing selection is kept if still valid.
+    function populateCountries() {
+      if (!countrySelect) return;
+      var region = regionSelect ? regionSelect.value : '';
+      var list;
+      if (!region || region === 'Other') {
+        list = ALL_COUNTRIES.slice();
       } else {
-        // No booking URL configured yet — focus the form name field as a fallback
-        var nameField = document.getElementById('cf-name');
-        if (nameField) {
-          form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          setTimeout(function() { nameField.focus(); }, 350);
-        }
+        list = (REGIONS[region] || []).slice();
+        list.push('Other');
+        list.sort();
       }
+      var current = countrySelect.value;
+      countrySelect.innerHTML = '';
+      var ph = document.createElement('option');
+      ph.value = ''; ph.textContent = 'Select…';
+      countrySelect.appendChild(ph);
+      list.forEach(function (c) {
+        var o = document.createElement('option');
+        o.value = c; o.textContent = c;
+        countrySelect.appendChild(o);
+      });
+      if (current && list.indexOf(current) !== -1) countrySelect.value = current;
     }
-    if (bookingCta) bookingCta.addEventListener('click', openBooking);
-    if (successBookBtn) successBookBtn.addEventListener('click', openBooking);
+    if (regionSelect) regionSelect.addEventListener('change', populateCountries);
+    populateCountries();
 
-    // Handle ?intent=partner from hero / saphi deep links
+    // Handle ?intent=partner deep links from hero / Saphi
     function applyIntent() {
       var hash = window.location.hash || '';
-      if (hash.indexOf('intent=partner') !== -1) {
-        if (interestSelect) {
-          interestSelect.value = 'distributor';
-          syncOptional();
-        }
-        meetingButtons.forEach(function(b) {
-          if (b.dataset.meeting === 'partnership') b.click();
-        });
+      if (hash.indexOf('intent=partner') !== -1 && interestSelect) {
+        interestSelect.value = 'Distributor Partnership';
       }
     }
     window.addEventListener('hashchange', applyIntent);
@@ -6539,15 +6527,10 @@
       clearError();
 
       // Honeypot — silently abort if a bot filled it
-      var hp = form.querySelector('input[name="company_website"]');
-      if (hp && hp.value.trim() !== '') {
-        // Pretend success so bot doesn't retry
-        form.hidden = true;
-        if (successBlock) successBlock.hidden = false;
-        return;
-      }
+      var hp = form.querySelector('input[name="_hp"]');
+      if (hp && hp.value.trim() !== '') return;
 
-      // Required fields
+      // Validation — required fields (incl. consent checkbox) + email format
       var requiredFields = form.querySelectorAll('[required]');
       var firstInvalid = null;
       requiredFields.forEach(function(f) {
@@ -6557,79 +6540,60 @@
           if (!firstInvalid) firstInvalid = f;
         }
       });
-      // Basic email check
-      var email = form.querySelector('#cf-email');
-      if (email && email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-        markInvalid(email);
-        if (!firstInvalid) firstInvalid = email;
+      var emailEl = form.querySelector('#cf-email');
+      if (emailEl && emailEl.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
+        markInvalid(emailEl);
+        if (!firstInvalid) firstInvalid = emailEl;
       }
-      if (firstInvalid) {
+      if (firstInvalid || !form.checkValidity()) {
+        if (!firstInvalid) firstInvalid = form.querySelector(':invalid');
         showError('Please complete the highlighted fields before sending.');
-        firstInvalid.focus();
+        if (firstInvalid) firstInvalid.focus();
         return;
       }
 
-      // Build payload snapshot for logging and summaries
-      var payload = {};
-      new FormData(form).forEach(function(v, k) { payload[k] = v; });
-      payload.timestamp = new Date().toISOString();
-      payload.user_agent = navigator.userAgent;
-      payload.referrer = document.referrer;
-
-      try { console.info('[Saphira] Lead submitted:', payload); } catch (_) {}
-
-      // ── EMAIL DELIVERY via FormSubmit (formsubmit.co) ──
-      // First-time activation: when the very first submission hits this endpoint,
-      // FormSubmit emails info@saphira-systems.at with a one-click activation link.
-      // Once clicked, all subsequent submissions are delivered directly. No account
-      // or API key required.
-      var TEAM_EMAIL = 'info@saphira-systems.at';
-      var FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/' + TEAM_EMAIL;
-
-      // Build the customer confirmation message (sent automatically by FormSubmit as
-      // an auto-response to the email address in the `email` field).
-      function line(label, value) {
-        if (!value) return null;
-        return label + ': ' + value;
-      }
-      var customerName = (payload.name || '').split(' ')[0] || (payload.name || '');
-      var confirmationLines = [
-        'Hi ' + customerName + ',',
-        '',
-        'Thank you for reaching out to Saphira Systems. We received your inquiry — a senior team member will respond within one business day.',
-        '',
-        '── Your submission ──',
-        line('Name',          payload.name),
-        line('Company',       payload.company),
-        line('Country',       payload.country),
-        line('Email',         payload.email),
-        line('Phone',         payload.phone),
-        line('Interest',      payload.interest),
-        line('Meeting type',  payload.meeting_type),
-        line('Region',        payload.region),
-        line('Project size',  payload.project_size),
-        line('Application',   payload.application),
-        line('Preferred',     payload.preferred_contact),
-        '',
-        'Message:',
-        payload.message || '',
-        '',
-        '— Saphira Systems · Power. Deployed. Anywhere.',
-        'info@saphira-systems.at · +43 660 444 4836 · www.saphira-systems.at'
-      ].filter(function(l) { return l !== null; }).join('\n');
-
-      // Compose the FormSubmit body — copy form fields plus FormSubmit-specific keys
-      var fsBody = new FormData();
-      new FormData(form).forEach(function(v, k) {
-        // Skip empty optional fields so the team email stays tidy
-        if (v) fsBody.append(k, v);
+      // Snapshot the form values (trimmed)
+      var data = {};
+      new FormData(form).forEach(function (v, k) {
+        data[k] = (typeof v === 'string') ? v.trim() : v;
       });
-      fsBody.append('_subject', 'Saphira Inquiry · ' + (payload.lead_category || 'General') +
-        (payload.company ? ' · ' + payload.company : ''));
-      fsBody.append('_template', 'table');
-      fsBody.append('_captcha', 'false'); // we have our own honeypot
-      fsBody.append('_autoresponse', confirmationLines);
-      if (payload.email) fsBody.append('_replyto', payload.email);
+
+      // HubSpot stores first/last name separately — split at the first space.
+      var fullName  = (data.name || '').trim();
+      var firstName = fullName, lastName = '';
+      var spaceAt = fullName.indexOf(' ');
+      if (spaceAt !== -1) {
+        firstName = fullName.slice(0, spaceAt);
+        lastName  = fullName.slice(spaceAt + 1).trim();
+      }
+
+      // Build the HubSpot field list — empty values are not sent at all.
+      var fields = [];
+      function addField(name, value) {
+        if (value != null && String(value).trim() !== '') {
+          fields.push({ name: name, value: String(value).trim() });
+        }
+      }
+      addField('firstname', firstName);
+      addField('lastname',  lastName);
+      Object.keys(FIELD_MAP).forEach(function (htmlName) {
+        addField(FIELD_MAP[htmlName], data[htmlName]);
+      });
+
+      // Read the HubSpot tracking cookie so the submission links to this session.
+      function hsCookie(name) {
+        var m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return m ? m.pop() : '';
+      }
+      var context = { pageUri: window.location.href, pageName: document.title };
+      var hutk = hsCookie('hubspotutk');
+      if (hutk) context.hutk = hutk;
+
+      var body = { fields: fields, context: context };
+      var url = 'https://api.hsforms.com/submissions/v3/integration/submit/' +
+        PORTAL_ID + '/' + FORM_GUID;
+
+      try { console.info('[Saphira] HubSpot submit:', body); } catch (_) {}
 
       // UI: lock the submit button while sending
       var submitBtn = document.getElementById('cf-submit');
@@ -6649,23 +6613,26 @@
         submitBtn.innerHTML = origLabel;
       }
 
-      fetch(FORMSUBMIT_ENDPOINT, {
+      fetch(url, {
         method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: fsBody
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
       })
-      .then(function(r) {
-        return r.json().then(function(json) {
+      .then(function (r) {
+        return r.json().then(function (json) {
           return { status: r.status, json: json };
-        }).catch(function() {
+        }).catch(function () {
           return { status: r.status, json: null };
         });
       })
-      .then(function(result) {
-        try { console.info('[Saphira] FormSubmit response:', result); } catch (_) {}
-        var json = result.json || {};
-        var ok = json && (json.success === true || json.success === 'true');
-        if (ok) {
+      .then(function (result) {
+        try { console.info('[Saphira] HubSpot response:', result); } catch (_) {}
+        if (result.status >= 200 && result.status < 300) {
+          // Reset the form, then re-fire the region "change" so the Country
+          // dropdown is repopulated correctly for any reuse.
+          form.reset();
+          if (regionSelect) regionSelect.dispatchEvent(new Event('change'));
+          restoreButton();
           form.hidden = true;
           if (successBlock) {
             successBlock.hidden = false;
@@ -6673,19 +6640,18 @@
           }
         } else {
           restoreButton();
-          var detail = json && json.message ? ' (' + json.message + ')' : '';
+          var detail = result.json && result.json.message ? ' (' + result.json.message + ')' : '';
           showError(
             'Submission could not be sent' + detail + '. ' +
-            'If this is the first time the form is used, FormSubmit may have sent an activation email to info@saphira-systems.at — please click the activation link and try again. ' +
-            'Otherwise, email us directly at info@saphira-systems.at.'
+            'Please try again, or email us directly at info@saphira-systems.at.'
           );
         }
       })
-      .catch(function(err) {
-        try { console.error('[Saphira] FormSubmit network error:', err); } catch (_) {}
+      .catch(function (err) {
+        try { console.error('[Saphira] HubSpot network error:', err); } catch (_) {}
         restoreButton();
         showError(
-          'Network issue while sending. This often happens when the page is opened locally (file:// or preview). ' +
+          'Network issue while sending. This can happen when the page is opened locally (file:// or preview). ' +
           'On the live HTTPS site it should work — or email us directly at info@saphira-systems.at.'
         );
       });
@@ -7022,12 +6988,12 @@
         'contact.form.eyebrow': '02 · Send us a brief',
         'contact.form.title': 'Tell us about your project.',
         'contact.form.sub': 'Five minutes. Our team reads every message.',
-        'contact.form.name': 'Name',
-        'contact.form.company': 'Company',
-        'contact.form.email': 'Email',
+        'contact.form.name': 'Name <span class="req">*</span>',
+        'contact.form.company': 'Company <span class="req">*</span>',
+        'contact.form.email': 'Email <span class="req">*</span>',
         'contact.form.phone': 'Phone',
         'contact.form.country': 'Country',
-        'contact.form.interest': 'Interest',
+        'contact.form.interest': 'Inquiry type',
         'contact.form.interest.placeholder': 'Select…',
         'contact.form.interest.distributor': 'Distributor Partnership',
         'contact.form.interest.project': 'Project Inquiry',
@@ -7373,12 +7339,12 @@
         'contact.form.eyebrow': '02 · Anfrage senden',
         'contact.form.title': 'Erzählen Sie uns von Ihrem Projekt.',
         'contact.form.sub': 'Fünf Minuten. Unser Team liest jede Nachricht.',
-        'contact.form.name': 'Name',
-        'contact.form.company': 'Firma',
-        'contact.form.email': 'E-Mail',
+        'contact.form.name': 'Name <span class="req">*</span>',
+        'contact.form.company': 'Firma <span class="req">*</span>',
+        'contact.form.email': 'E-Mail <span class="req">*</span>',
         'contact.form.phone': 'Telefon',
         'contact.form.country': 'Land',
-        'contact.form.interest': 'Interesse',
+        'contact.form.interest': 'Anfrageart',
         'contact.form.interest.placeholder': 'Auswählen…',
         'contact.form.interest.distributor': 'Distributor-Partnerschaft',
         'contact.form.interest.project': 'Projektanfrage',
@@ -7724,12 +7690,12 @@
         'contact.form.eyebrow': '02 · Envíenos una consulta',
         'contact.form.title': 'Cuéntenos sobre su proyecto.',
         'contact.form.sub': 'Cinco minutos. Nuestro equipo lee cada mensaje.',
-        'contact.form.name': 'Nombre',
-        'contact.form.company': 'Empresa',
-        'contact.form.email': 'Email',
+        'contact.form.name': 'Nombre <span class="req">*</span>',
+        'contact.form.company': 'Empresa <span class="req">*</span>',
+        'contact.form.email': 'Email <span class="req">*</span>',
         'contact.form.phone': 'Teléfono',
         'contact.form.country': 'País',
-        'contact.form.interest': 'Interés',
+        'contact.form.interest': 'Tipo de consulta',
         'contact.form.interest.placeholder': 'Seleccionar…',
         'contact.form.interest.distributor': 'Alianza de distribuidores',
         'contact.form.interest.project': 'Consulta de proyecto',
