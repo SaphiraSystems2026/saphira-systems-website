@@ -5044,6 +5044,13 @@
           </span>
         </label>
 
+        <label class="form-consent">
+          <input type="checkbox" name="marketing_consent" id="cf-marketing">
+          <span data-i18n="contact.form.marketing">
+            I would also like to receive occasional product updates, news and offers from Saphira Systems by email. I can unsubscribe at any time.
+          </span>
+        </label>
+
         <div class="form-actions">
           <button type="submit" class="hero-btn primary" id="cf-submit">
             <span data-i18n="contact.form.submit">Send inquiry</span>
@@ -6589,6 +6596,28 @@
       if (hutk) context.hutk = hutk;
 
       var body = { fields: fields, context: context };
+
+      // Pass consent to HubSpot as recorded legal basis.
+      //  • cf-consent (required)  → consentToProcess: legal basis to store/answer the inquiry.
+      //  • cf-marketing (opt-in)  → communications opt-in to the "Marketing Information"
+      //    subscription (id 2871506768). Recorded true/false per the checkbox so the
+      //    contact's marketing choice is explicit either way.
+      var consentEl = form.querySelector('#cf-consent');
+      if (consentEl && consentEl.checked) {
+        var marketingEl = form.querySelector('#cf-marketing');
+        body.legalConsentOptions = {
+          consent: {
+            consentToProcess: true,
+            text: 'I agree that Saphira Systems may process my personal data to respond to this inquiry.',
+            communications: [{
+              value: !!(marketingEl && marketingEl.checked),
+              subscriptionTypeId: 2871506768,
+              text: 'I agree to receive marketing communications (product updates, news and offers) from Saphira Systems.'
+            }]
+          }
+        };
+      }
+
       var url = 'https://api.hsforms.com/submissions/v3/integration/submit/' +
         PORTAL_ID + '/' + FORM_GUID;
 
@@ -7007,6 +7036,7 @@
         'contact.form.prefcontact': 'Preferred contact',
         'contact.form.message': 'Message',
         'contact.form.consent': 'I agree that Saphira Systems may process my data to respond to this inquiry, in line with the <a href="saphira-systems_privacy.html" target="_blank" rel="noopener">privacy policy</a>. <span class="req">*</span>',
+        'contact.form.marketing': 'I would also like to receive occasional product updates, news and offers from Saphira Systems by email. I can unsubscribe at any time.',
         'contact.form.submit': 'Send inquiry',
         'contact.form.response': 'Response within 1 business day.',
         'contact.success.title': 'Inquiry received.',
@@ -7358,6 +7388,7 @@
         'contact.form.prefcontact': 'Bevorzugter Kontaktweg',
         'contact.form.message': 'Nachricht',
         'contact.form.consent': 'Ich willige ein, dass Saphira Systems meine Daten zur Beantwortung dieser Anfrage verarbeiten darf, gemäß der <a href="saphira-systems_privacy.html" target="_blank" rel="noopener">Datenschutzerklärung</a>. <span class="req">*</span>',
+        'contact.form.marketing': 'Ich möchte außerdem gelegentlich Produkt-Updates, Neuigkeiten und Angebote von Saphira Systems per E-Mail erhalten. Ich kann mich jederzeit abmelden.',
         'contact.form.submit': 'Anfrage senden',
         'contact.form.response': 'Antwort innerhalb eines Arbeitstages.',
         'contact.success.title': 'Anfrage erhalten.',
@@ -7709,6 +7740,7 @@
         'contact.form.prefcontact': 'Contacto preferido',
         'contact.form.message': 'Mensaje',
         'contact.form.consent': 'Acepto que Saphira Systems procese mis datos para responder a esta solicitud, conforme a la <a href="saphira-systems_privacy.html" target="_blank" rel="noopener">política de privacidad</a>. <span class="req">*</span>',
+        'contact.form.marketing': 'También deseo recibir ocasionalmente novedades, actualizaciones y ofertas de Saphira Systems por correo electrónico. Puedo darme de baja en cualquier momento.',
         'contact.form.submit': 'Enviar consulta',
         'contact.form.response': 'Respuesta en un día hábil.',
         'contact.success.title': 'Consulta recibida.',
