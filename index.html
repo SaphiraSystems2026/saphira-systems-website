@@ -4974,16 +4974,18 @@
             </select>
           </div>
           <div class="form-field">
-            <label for="cf-interest" data-i18n="contact.form.interest">Interest</label>
-            <select id="cf-interest" name="interest">
+            <label for="cf-partner-type" data-i18n="contact.form.partner_type">Partner Type</label>
+            <select id="cf-partner-type" name="partner_type">
               <option value="" data-i18n="contact.form.interest.placeholder">Select…</option>
-              <option value="Distributor Partnership">Distributor Partnership</option>
-              <option value="End Customer">End Customer</option>
-              <option value="Service Partner">Service Partner</option>
-              <option value="Investor">Investor</option>
-              <option value="Financial Institution">Financial Institution</option>
-              <option value="Government">Government</option>
-              <option value="Press / Other">Press / Other</option>
+              <option value="Distributor">Distributor</option>
+              <option value="EPC">EPC / Installation Partner</option>
+              <option value="End User">End User</option>
+              <option value="Finance">Financing Partner</option>
+              <option value="Referral Partner">Referral Partner</option>
+              <option value="Consultant">Consultant</option>
+              <option value="Strategic Partner">Strategic Partner</option>
+              <option value="Government / NGO">Government / NGO</option>
+              <option value="Other">Other</option>
             </select>
           </div>
         </div>
@@ -6435,7 +6437,7 @@
 
     var successBlock = document.getElementById('contact-success');
     var errorBox = document.getElementById('cf-error');
-    var interestSelect = document.getElementById('cf-interest');
+    var partnerTypeSelect = document.getElementById('cf-partner-type');
     var regionSelect = document.getElementById('cf-region');
     var countrySelect = document.getElementById('cf-country');
 
@@ -6445,7 +6447,7 @@
     // HTML input name → HubSpot internal property name
     const FIELD_MAP = {
       company: "company", email: "email", phone: "phone",
-      region_market: "world_region", country: "country", interest: "interest",
+      region_market: "world_region", country: "country", partner_type: "partner_type",
       estimated_project_size: "estimated_project_size",
       application_area: "application_area", preferred_contact: "preferred_contact",
       message: "message"
@@ -6503,8 +6505,8 @@
     // Handle ?intent=partner deep links from hero / Saphi
     function applyIntent() {
       var hash = window.location.hash || '';
-      if (hash.indexOf('intent=partner') !== -1 && interestSelect) {
-        interestSelect.value = 'Distributor Partnership';
+      if (hash.indexOf('intent=partner') !== -1 && partnerTypeSelect) {
+        partnerTypeSelect.value = 'Distributor';
       }
     }
     window.addEventListener('hashchange', applyIntent);
@@ -7033,7 +7035,7 @@
         'contact.form.email': 'Email <span class="req">*</span>',
         'contact.form.phone': 'Phone',
         'contact.form.country': 'Country',
-        'contact.form.interest': 'Interest',
+        'contact.form.partner_type': 'Partner Type',
         'contact.form.interest.placeholder': 'Select…',
         'contact.form.interest.distributor': 'Distributor Partnership',
         'contact.form.interest.project': 'Project Inquiry',
@@ -7385,7 +7387,7 @@
         'contact.form.email': 'E-Mail <span class="req">*</span>',
         'contact.form.phone': 'Telefon',
         'contact.form.country': 'Land',
-        'contact.form.interest': 'Interesse',
+        'contact.form.partner_type': 'Partner-Typ',
         'contact.form.interest.placeholder': 'Auswählen…',
         'contact.form.interest.distributor': 'Distributor-Partnerschaft',
         'contact.form.interest.project': 'Projektanfrage',
@@ -7737,7 +7739,7 @@
         'contact.form.email': 'Email <span class="req">*</span>',
         'contact.form.phone': 'Teléfono',
         'contact.form.country': 'País',
-        'contact.form.interest': 'Interés',
+        'contact.form.partner_type': 'Tipo de socio',
         'contact.form.interest.placeholder': 'Seleccionar…',
         'contact.form.interest.distributor': 'Alianza de distribuidores',
         'contact.form.interest.project': 'Consulta de proyecto',
